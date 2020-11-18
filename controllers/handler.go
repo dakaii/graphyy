@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"coldhongdae/models"
+	"graphyy/models"
 
 	"github.com/samsarahq/thunder/graphql"
 	"github.com/samsarahq/thunder/graphql/schemabuilder"

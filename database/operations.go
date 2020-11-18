@@ -1,9 +1,9 @@
 package database
 
 import (
-	"coldhongdae/models"
 	"context"
 	"fmt"
+	"graphyy/models"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"

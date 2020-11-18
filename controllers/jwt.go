@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"coldhongdae/models"
 	"fmt"
+	"graphyy/models"
 	"os"
 	"time"
 

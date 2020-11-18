@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"coldhongdae/models"
 	"errors"
+	"graphyy/models"
 )
 
 // Signup lets users sign up for this application and returns a jwt.

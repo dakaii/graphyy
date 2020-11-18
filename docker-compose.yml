@@ -6,7 +6,7 @@ services:
     volumes:
       - .:/code
     ports:
-      - "8080:8080"
+      - "3030:3030"
     depends_on:
       - mongodb-local
     env_file:
@@ -18,6 +18,16 @@ services:
       - mongodb_data:/data/db
     ports:
       - "27017:27017"
+
+  test:
+    build: .
+    command: ./testing.test
+    volumes:
+      - .:/code
+    depends_on:
+      - mongodb-local
+    env_file:
+      - config.conf
 
 volumes: 
   mongodb_data:

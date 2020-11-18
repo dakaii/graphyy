@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"coldhongdae/models"
 	"errors"
+	"graphyy/models"
 
 	"golang.org/x/crypto/bcrypt"
 )
