@@ -1,12 +1,12 @@
-package controllers
+package controller
 
 import (
 	"errors"
-	"graphyy/models"
+	"graphyy/model"
 )
 
 // Signup lets users sign up for this application and returns a jwt.
-func (h *BaseHandler) Signup(user models.User) (*models.AuthToken, error) {
+func (h *BaseHandler) Signup(user model.User) (*model.AuthToken, error) {
 	if !isValidUsername(user.Username) {
 		return nil, errors.New("Invalid username")
 	}

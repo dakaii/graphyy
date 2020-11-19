@@ -15,4 +15,6 @@ require (
 	github.com/samsarahq/thunder v0.5.0
 	go.mongodb.org/mongo-driver v1.4.2
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
+	gorm.io/driver/postgres v1.0.5
+	gorm.io/gorm v1.20.7
 )

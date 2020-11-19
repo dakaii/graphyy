@@ -1,7 +1,7 @@
 package main
 
 import (
-	"graphyy/controllers"
+	"graphyy/controller"
 	"graphyy/database"
 	"net/http"
 	"os"
@@ -16,14 +16,10 @@ func main() {
 	if !exists {
 		port = "3030"
 	}
-	collectionName, exists := os.LookupEnv("MONGODB_COLLECTION_NAME")
-	if !exists {
-		collectionName = "testingCollection"
-	}
 
-	ctx, db := database.GetDatabase(collectionName)
-	userRepo := database.NewUserRepo(db, ctx, db.Collection(collectionName))
-	h := controllers.NewBaseHandler(userRepo)
+	db := database.GetDatabase()
+	userRepo := database.NewUserRepo(db)
+	h := controller.NewBaseHandler(userRepo)
 
 	schema := h.Schema()
 	introspection.AddIntrospectionToSchema(schema)

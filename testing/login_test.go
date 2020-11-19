@@ -2,7 +2,7 @@ package testing
 
 import (
 	"bytes"
-	"graphyy/controllers"
+	"graphyy/controller"
 	"graphyy/database"
 	"net/http"
 	"os"
@@ -17,7 +17,7 @@ func TestUserLogin(t *testing.T) {
 
 	ctx, db := database.GetDatabase(collectionName)
 	userRepo := database.NewUserRepo(db, ctx, db.Collection(collectionName))
-	h := controllers.NewBaseHandler(userRepo)
+	h := controller.NewBaseHandler(userRepo)
 
 	jsonStr := []byte(`{"username":"testuser","password":"testpass"}`)
 
@@ -33,7 +33,7 @@ func TestUserLogin(t *testing.T) {
 	// 	t.Errorf("handler returned wrong status code: got %v want %v",
 	// 		status, http.StatusOK)
 	// }
-	// res := models.AuthToken{}
+	// res := model.AuthToken{}
 	// json.Unmarshal([]byte(rr.Body.String()), &res)
 
 	// expected := `Bearer`

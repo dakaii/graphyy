@@ -8,16 +8,16 @@ services:
     ports:
       - "3030:3030"
     depends_on:
-      - mongodb-local
+      - postgres-local
     env_file:
       - config.conf
 
-  mongodb-local:
-    image: mongo:latest
+  postgres-local:
+    image: postgres:latest
     volumes:
-      - mongodb_data:/data/db
-    ports:
-      - "27017:27017"
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - config.conf
 
   test:
     build: .
@@ -25,9 +25,9 @@ services:
     volumes:
       - .:/code
     depends_on:
-      - mongodb-local
+      - postgres-local
     env_file:
       - config.conf
 
 volumes: 
-  mongodb_data:
+  postgres_data:

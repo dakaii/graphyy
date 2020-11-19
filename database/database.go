@@ -1,41 +1,44 @@
 package database
 
 import (
-	"context"
-	"log"
+	"fmt"
+	"graphyy/model"
 	"os"
-	"time"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/x/bsonx"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-// https://www.mongodb.com/blog/post/mongodb-go-driver-tutorial
 // GetDatabase returns a database instance.
-func GetDatabase(userCollection string) (context.Context, *mongo.Database) {
-	url, exists := os.LookupEnv("MONGODB_URL")
+func GetDatabase() *gorm.DB {
+
+	user, exists := os.LookupEnv("POSTGRES_USER")
 	if !exists {
-		url = "mongodb://localhost:27017"
-	}
-	dbName, exists := os.LookupEnv("MONGODB_DB_NAME")
-	if !exists {
-		dbName = "testingDB"
+		user = "postgres"
 	}
 
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(url))
-	if err != nil {
-		log.Fatal(err)
+	password, exists := os.LookupEnv("POSTGRES_PASSWORD")
+	if !exists {
+		password = "postgres"
 	}
-	database := client.Database(dbName)
-	collection := database.Collection(userCollection)
-	opts := options.CreateIndexes().SetMaxTime(10 * time.Second)
-	models := []mongo.IndexModel{
-		{
-			Keys: bsonx.Doc{{Key: "username", Value: bsonx.String("text")}},
-		},
+
+	dbname, exists := os.LookupEnv("POSTGRES_DB_NAME")
+	if !exists {
+		dbname = "random_database_name"
 	}
-	_, err = collection.Indexes().CreateMany(ctx, models, opts)
-	return ctx, database
+
+	host, exists := os.LookupEnv("POSTGRES_HOST")
+	if !exists {
+		host = "localhost"
+	}
+
+	port, exists := os.LookupEnv("POSTGRES_PORT")
+	if !exists {
+		port = "5432"
+	}
+
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable TimeZone=Asia/Tokyo", user, password, dbname, host, port)
+	db, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db.AutoMigrate(&model.User{})
+	return db
 }
