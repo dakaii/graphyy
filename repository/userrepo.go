@@ -1,4 +1,4 @@
-package database
+package repository
 
 import (
 	"fmt"
@@ -7,6 +7,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
+
+// UserRepository maybe I should rename this interface
+type UserRepository interface {
+	GetExistingUser(username string) model.User
+	SaveUser(user model.User) (model.User, error)
+}
 
 // UserRepo should i rename it?
 type UserRepo struct {

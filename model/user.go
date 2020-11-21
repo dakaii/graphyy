@@ -1,15 +1,19 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 // TODO probably not the best package name. check what the best practice is.
 
 // User struct
 type User struct {
-	ID        uint       `gorm:"primary_key" json:"id"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `json:"deleted_at"`
-	Username  string     `gorm:"type:varchar(40); unique_index; not null" json:"username"`
-	Password  string     `gorm:"type:varchar(40); not null" json:"password"`
+	ID        uint           `gorm:"primary_key" json:"id" graphql:"-"`
+	CreatedAt time.Time      `json:"createdAt" graphql:"-"`
+	UpdatedAt time.Time      `json:"updatedAt" graphql:"-"`
+	DeletedAt gorm.DeletedAt `json:"deletedAt" graphql:"-"`
+	Username  string         `gorm:"unique;index; not null" json:"username" graphql:"username"`
+	Password  string         `gorm:"type:varchar(1000); not null" json:"password" graphql:"password"`
 }

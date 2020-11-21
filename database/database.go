@@ -24,7 +24,7 @@ func GetDatabase() *gorm.DB {
 
 	dbname, exists := os.LookupEnv("POSTGRES_DB_NAME")
 	if !exists {
-		dbname = "random_database_name"
+		dbname = "postgres"
 	}
 
 	host, exists := os.LookupEnv("POSTGRES_HOST")
@@ -37,8 +37,20 @@ func GetDatabase() *gorm.DB {
 		port = "5432"
 	}
 
-	dsn := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable TimeZone=Asia/Tokyo", user, password, dbname, host, port)
+	dsn := fmt.Sprintf(
+		"user=%s password=%s dbname=%s host=%s port=%s sslmode=disable TimeZone=Asia/Tokyo",
+		user, password, dbname, host, port)
 	db, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	db.AutoMigrate(&model.User{})
 	return db
 }
+
+// func createPgDb(port string, host string, user string, password string, dbname string) {
+// 	cmd := exec.Command("createdb", "-p", port, "-h", host, "-U", user, "-W", password, "-e", dbname)
+// 	var out bytes.Buffer
+// 	cmd.Stdout = &out
+// 	if err := cmd.Run(); err != nil {
+// 		log.Printf("Error: %v", err)
+// 	}
+// 	log.Printf("Output: %q\n", out.String())
+// }

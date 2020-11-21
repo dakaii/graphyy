@@ -27,7 +27,7 @@ func (h *BaseHandler) registerAuthMutation(schema *schemabuilder.Schema) {
 
 // Schema builds a graphql schema and returns it
 func (h *BaseHandler) Schema() *graphql.Schema {
-	builder := schemabuilder.NewSchema()
-	h.registerAuthMutation(builder)
-	return builder.MustBuild()
+	schema := schemabuilder.NewSchema()
+	h.registerAuthMutation(schema)
+	return schema.MustBuild()
 }

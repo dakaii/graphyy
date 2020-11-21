@@ -3,6 +3,7 @@ package main
 import (
 	"graphyy/controller"
 	"graphyy/database"
+	"graphyy/repository"
 	"net/http"
 	"os"
 
@@ -18,7 +19,7 @@ func main() {
 	}
 
 	db := database.GetDatabase()
-	userRepo := database.NewUserRepo(db)
+	userRepo := repository.NewUserRepo(db)
 	h := controller.NewBaseHandler(userRepo)
 
 	schema := h.Schema()
