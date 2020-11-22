@@ -30,7 +30,7 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 func (h *UserRepo) GetExistingUser(username string) model.User {
 	var user model.User
 	h.db.Where("username = ?", username).First(*&user)
-	return model.User{Username: user.Username, Password: user.Password}
+	return user
 }
 
 // SaveUser creates a new user in the db..

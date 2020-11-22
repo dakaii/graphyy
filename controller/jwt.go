@@ -24,7 +24,7 @@ func generateJWT(user model.User) model.AuthToken {
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiresAt,
 		},
-		User: model.User{Username: user.Username, Password: user.Password},
+		User: user,
 	}
 
 	tokenString, error := token.SignedString([]byte(secret))
