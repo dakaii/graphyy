@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/samsarahq/thunder/graphql"
-	"github.com/samsarahq/thunder/graphql/graphiql"
+
 	"github.com/samsarahq/thunder/graphql/introspection"
 )
 
@@ -25,8 +25,6 @@ func main() {
 	schema := h.Schema()
 	introspection.AddIntrospectionToSchema(schema)
 
-	// Expose schema and graphiql.
-	http.Handle("/graphql", graphql.Handler(schema))
-	http.Handle("/graphiql/", http.StripPrefix("/graphiql/", graphiql.Handler()))
+	http.Handle("/graphql", graphql.HTTPHandler(schema))
 	http.ListenAndServe(":"+port, nil)
 }
