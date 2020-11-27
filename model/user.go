@@ -17,3 +17,5 @@ type User struct {
 	Username  string         `gorm:"unique;index; not null" json:"username" graphql:"username"`
 	Password  string         `gorm:"type:varchar(1000); not null" json:"password" graphql:"password"`
 }
+
+// https://github.com/graphql-go/graphql/blob/master/examples/todo/schema/schema.go

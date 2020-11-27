@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"context"
 	"errors"
 	"graphyy/model"
 
@@ -9,8 +8,7 @@ import (
 )
 
 // Login returns a jwt.
-func (h *BaseHandler) Login(ctx context.Context, args struct{ user model.User }) (model.AuthToken, error) {
-	user := args.user
+func (h *BaseHandler) login(user model.User) (model.AuthToken, error) {
 	existingUser := h.userRepo.GetExistingUser(user.Username)
 	if existingUser.Username != "" {
 		return model.AuthToken{}, errors.New("No user found with the inputted username")

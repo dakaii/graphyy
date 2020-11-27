@@ -1,14 +1,12 @@
 package controller
 
 import (
-	"context"
 	"errors"
 	"graphyy/model"
 )
 
 // Signup lets users sign up for this application and returns a jwt.
-func (h *BaseHandler) Signup(ctx context.Context, args struct{ user model.User }) (model.AuthToken, error) {
-	user := args.user
+func (h *BaseHandler) signup(user model.User) (model.AuthToken, error) {
 	if !isValidUsername(user.Username) {
 		return model.AuthToken{}, errors.New("Invalid username")
 	}

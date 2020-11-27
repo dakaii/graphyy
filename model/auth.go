@@ -6,9 +6,9 @@ import (
 
 //AuthToken struct
 type AuthToken struct {
-	TokenType string `json:"tokenType" graphql:"tokenType"`
-	Token     string `json:"accessToken" graphql:"token"`
-	ExpiresIn int64  `json:"expiresIn" graphql:"expiresIn"`
+	TokenType string `json:"tokenType"`
+	Token     string `json:"accessToken"`
+	ExpiresIn int64  `json:"expiresIn"`
 }
 
 //AuthTokenClaim struct
