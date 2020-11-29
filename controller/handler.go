@@ -35,7 +35,7 @@ func (h *BaseHandler) Schema() graphql.Schema {
 	// h.registerAuthMutation(schema)
 	// return schema.MustBuild()
 	schema, _ := graphql.NewSchema(graphql.SchemaConfig{
-		Query:    getRootQuery(),
+		Query:    h.getRootQuery(),
 		Mutation: h.getRootMutation(),
 	})
 	return schema

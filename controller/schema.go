@@ -144,20 +144,20 @@ func (h *BaseHandler) getRootMutation() *graphql.Object {
 
 // }
 
-func getRootQuery() *graphql.Object {
+func (h *BaseHandler) getRootQuery() *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "RootQuery",
 		Fields: graphql.Fields{
-			"todo": &graphql.Field{
+			"me": &graphql.Field{
 				Type: graphql.NewObject(graphql.ObjectConfig{
-					Name: "Todo",
+					Name: "Me",
 					Fields: graphql.Fields{
-						"todo": &graphql.Field{
+						"username": &graphql.Field{
 							Type: graphql.String,
 						},
 					},
 				}),
-				Description: "Get single todo",
+				Description: "Get the logged-in user's info",
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.String,

@@ -15,11 +15,11 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-// type postData struct {
-// 	Query     string                 `json:"query"`
-// 	Operation string                 `json:"operation"`
-// 	Variables map[string]interface{} `json:"variables"`
-// }
+type postData struct {
+	Query     string                 `json:"query"`
+	Operation string                 `json:"operation"`
+	Variables map[string]interface{} `json:"variables"`
+}
 
 func main() {
 	port, exists := os.LookupEnv("PORT")
@@ -31,53 +31,23 @@ func main() {
 	userRepo := repository.NewUserRepo(db)
 	h := controller.NewBaseHandler(userRepo)
 
-	// schema := h.Schema()
-	// introspection.AddIntrospectionToSchema(schema)
-
-	// http.Handle("/graphql", graphql.HTTPHandler(schema))
-	// http.ListenAndServe(":"+port, nil)
-	// http.HandleFunc("/graphql", func(w http.ResponseWriter, req *http.Request) {
-	// 	var p postData
-	// 	if err := json.NewDecoder(req.Body).Decode(&p); err != nil {
-	// 		w.WriteHeader(400)
-	// 		return
-	// 	}
-	// 	result := graphql.Do(graphql.Params{
-	// 		Context:        req.Context(),
-	// 		Schema:         h.Schema(),
-	// 		RequestString:  p.Query,
-	// 		VariableValues: p.Variables,
-	// 		OperationName:  p.Operation,
-	// 	})
-	// 	if err := json.NewEncoder(w).Encode(result); err != nil {
-	// 		fmt.Printf("could not write result to response: %s", err)
-	// 	}
-	// })
 	router := mux.NewRouter()
-	//api route is /people,
-	//Methods("GET", "OPTIONS") means it support GET, OPTIONS
 	router.HandleFunc("/graphql", func(w http.ResponseWriter, req *http.Request) {
-		query := req.URL.Query().Get("query")
+		var p postData
+		if err := json.NewDecoder(req.Body).Decode(&p); err != nil {
+			w.WriteHeader(400)
+			return
+		}
 		result := graphql.Do(graphql.Params{
-			Schema:        h.Schema(),
-			RequestString: query,
+			Context:        req.Context(),
+			Schema:         h.Schema(),
+			RequestString:  p.Query,
+			VariableValues: p.Variables,
+			OperationName:  p.Operation,
 		})
-		json.NewEncoder(w).Encode(result)
-		// var p postData
-		// if err := json.NewDecoder(req.Body).Decode(&p); err != nil {
-		// 	w.WriteHeader(400)
-		// 	return
-		// }
-		// result := graphql.Do(graphql.Params{
-		// 	Context:        req.Context(),
-		// 	Schema:         h.Schema(),
-		// 	RequestString:  p.Query,
-		// 	VariableValues: p.Variables,
-		// 	OperationName:  p.Operation,
-		// })
-		// if err := json.NewEncoder(w).Encode(result); err != nil {
-		// 	fmt.Printf("could not write result to response: %s", err)
-		// }
+		if err := json.NewEncoder(w).Encode(result); err != nil {
+			fmt.Printf("could not write result to response: %s", err)
+		}
 	})
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
 	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
