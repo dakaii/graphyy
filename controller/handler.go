@@ -1,11 +1,21 @@
 package controller
 
 import (
+	"encoding/json"
+	"fmt"
 	"graphyy/repository"
+	"log"
+	"net/http"
 
 	// "github.com/samsarahq/thunder/graphql"
 	"github.com/graphql-go/graphql"
 )
+
+type postData struct {
+	Query     string                 `json:"query"`
+	Operation string                 `json:"operation"`
+	Variables map[string]interface{} `json:"variables"`
+}
 
 // BaseHandler contains all the repositories
 type BaseHandler struct {
@@ -26,4 +36,31 @@ func (h *BaseHandler) Schema() graphql.Schema {
 		Mutation: h.getRootMutation(),
 	})
 	return schema
+}
+
+// GraphqlHandlfunc is a handler for the graphql endpoint.
+func (h *BaseHandler) GraphqlHandlfunc(w http.ResponseWriter, req *http.Request) {
+	var p postData
+	if err := json.NewDecoder(req.Body).Decode(&p); err != nil {
+		w.WriteHeader(400)
+		return
+	}
+	// token := req.Header.Get("token")
+	// TODO write a function that decodes the token and return the original user instance.
+
+	result := graphql.Do(graphql.Params{
+		// Context: context.WithValue(context.Background(), "currentUser", user),
+		Context:        req.Context(),
+		Schema:         h.Schema(),
+		RequestString:  p.Query,
+		VariableValues: p.Variables,
+		OperationName:  p.Operation,
+	})
+	if len(result.Errors) > 0 {
+		log.Printf("wrong result, unexpected errors: %v", result.Errors)
+		return
+	}
+	if err := json.NewEncoder(w).Encode(result); err != nil {
+		fmt.Printf("could not write result to response: %s", err)
+	}
 }

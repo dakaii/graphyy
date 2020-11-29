@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"graphyy/controller"
 	"graphyy/database"
@@ -12,14 +11,7 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/graphql-go/graphql"
 )
-
-type postData struct {
-	Query     string                 `json:"query"`
-	Operation string                 `json:"operation"`
-	Variables map[string]interface{} `json:"variables"`
-}
 
 func main() {
 	port, exists := os.LookupEnv("PORT")
@@ -32,26 +24,7 @@ func main() {
 	h := controller.NewBaseHandler(userRepo)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/graphql", func(w http.ResponseWriter, req *http.Request) {
-		var p postData
-		if err := json.NewDecoder(req.Body).Decode(&p); err != nil {
-			w.WriteHeader(400)
-			return
-		}
-		// token := req.Header.Get("token")
-
-		result := graphql.Do(graphql.Params{
-			Context: req.Context(),
-			// Context:        context.WithValue(context.Background(), "token", token),
-			Schema:         h.Schema(),
-			RequestString:  p.Query,
-			VariableValues: p.Variables,
-			OperationName:  p.Operation,
-		})
-		if err := json.NewEncoder(w).Encode(result); err != nil {
-			fmt.Printf("could not write result to response: %s", err)
-		}
-	})
+	router.HandleFunc("/graphql", h.GraphqlHandlfunc)
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
 	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})

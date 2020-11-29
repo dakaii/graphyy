@@ -14,11 +14,10 @@ func (h *BaseHandler) signup(user model.User) (model.AuthToken, error) {
 	if existingUser.Username != "" {
 		return model.AuthToken{}, errors.New("this username is already in use")
 	}
-	user, _ = h.userRepo.SaveUser(user)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
+	user, err := h.userRepo.SaveUser(user)
+	if err != nil {
+		return model.AuthToken{}, err
+	}
 
 	token := generateJWT(user)
 	return token, nil
