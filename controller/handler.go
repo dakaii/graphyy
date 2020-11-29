@@ -19,21 +19,8 @@ func NewBaseHandler(userRepo repository.UserRepository) *BaseHandler {
 	}
 }
 
-// func (h *BaseHandler) registerAuthMutation(schema *schemabuilder.Schema) {
-// 	object := schema.Mutation()
-// 	object.FieldFunc("signup", func(ctx context.Context, args struct{ user *model.User }) (model.AuthToken, error) {
-// 		return h.signup(*args.user)
-// 	})
-// 	object.FieldFunc("login", func(ctx context.Context, args struct{ user *model.User }) (model.AuthToken, error) {
-// 		return h.login(*args.user)
-// 	})
-// }
-
 // Schema builds a graphql schema and returns it
 func (h *BaseHandler) Schema() graphql.Schema {
-	// schema := schemabuilder.NewSchema()
-	// h.registerAuthMutation(schema)
-	// return schema.MustBuild()
 	schema, _ := graphql.NewSchema(graphql.SchemaConfig{
 		Query:    h.getRootQuery(),
 		Mutation: h.getRootMutation(),

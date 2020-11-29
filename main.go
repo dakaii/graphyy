@@ -38,8 +38,11 @@ func main() {
 			w.WriteHeader(400)
 			return
 		}
+		// token := req.Header.Get("token")
+
 		result := graphql.Do(graphql.Params{
-			Context:        req.Context(),
+			Context: req.Context(),
+			// Context:        context.WithValue(context.Background(), "token", token),
 			Schema:         h.Schema(),
 			RequestString:  p.Query,
 			VariableValues: p.Variables,

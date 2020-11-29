@@ -39,7 +39,8 @@ func (h *UserRepo) SaveUser(user model.User) (model.User, error) {
 	hashedPass, _ := hashPassword(user.Password)
 	user.Password = hashedPass
 
-	h.db.Create(&user)
+	result := h.db.Create(&user)
+	fmt.Println(result)
 	// result := h.db.Create(&user)
 	// if result.Error
 	fmt.Println("Inserted a user with ID:", user.ID)
