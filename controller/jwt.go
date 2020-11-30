@@ -2,8 +2,8 @@ package controller
 
 import (
 	"fmt"
+	"graphyy/envvar"
 	"graphyy/model"
-	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -11,11 +11,7 @@ import (
 
 // TODO move this file to another package. (make a new package)
 func generateJWT(user model.User) model.AuthToken {
-	secret, exists := os.LookupEnv("AUTH_SECRET")
-	if !exists {
-		secret = "secret_key"
-	}
-
+	secret := envvar.AuthSecret()
 	expiresAt := time.Now().Add(time.Minute * 1).Unix()
 
 	token := jwt.New(jwt.SigningMethodHS256)

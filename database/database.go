@@ -2,8 +2,8 @@ package database
 
 import (
 	"fmt"
+	"graphyy/envvar"
 	"graphyy/model"
-	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,34 +12,15 @@ import (
 // GetDatabase returns a database instance.
 func GetDatabase() *gorm.DB {
 
-	user, exists := os.LookupEnv("POSTGRES_USER")
-	if !exists {
-		user = "postgres"
-	}
-
-	password, exists := os.LookupEnv("POSTGRES_PASSWORD")
-	if !exists {
-		password = "postgres"
-	}
-
-	dbname, exists := os.LookupEnv("POSTGRES_DB_NAME")
-	if !exists {
-		dbname = "postgres"
-	}
-
-	host, exists := os.LookupEnv("POSTGRES_HOST")
-	if !exists {
-		host = "localhost"
-	}
-
-	port, exists := os.LookupEnv("POSTGRES_PORT")
-	if !exists {
-		port = "5432"
-	}
+	user := envvar.DBUser()
+	password := envvar.DBPassword()
+	dbname := envvar.DBName()
+	dbhost := envvar.DBHost()
+	dbport := envvar.DBPort()
 
 	dsn := fmt.Sprintf(
 		"user=%s password=%s dbname=%s host=%s port=%s sslmode=disable TimeZone=Asia/Tokyo",
-		user, password, dbname, host, port)
+		user, password, dbname, dbhost, dbport)
 	db, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	db.AutoMigrate(&model.User{})
 	return db
