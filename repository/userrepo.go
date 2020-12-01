@@ -29,7 +29,7 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 // GetExistingUser fetches a user by the username from the db and returns it.
 func (h *UserRepo) GetExistingUser(username string) model.User {
 	var user model.User
-	h.db.Where("username = ?", username).First(*&user)
+	h.db.Where("username = ?", username).First(&user)
 	return user
 }
 

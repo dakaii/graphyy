@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"graphyy/repository"
@@ -45,12 +46,13 @@ func (h *BaseHandler) GraphqlHandlfunc(w http.ResponseWriter, req *http.Request)
 		w.WriteHeader(400)
 		return
 	}
-	// token := req.Header.Get("token")
+	token := req.Header.Get("token")
+	fmt.Println(token)
 	// TODO write a function that decodes the token and return the original user instance.
+	user, _ := verifyJWT(token)
 
 	result := graphql.Do(graphql.Params{
-		// Context: context.WithValue(context.Background(), "currentUser", user),
-		Context:        req.Context(),
+		Context:        context.WithValue(context.Background(), "currentUser", user),
 		Schema:         h.Schema(),
 		RequestString:  p.Query,
 		VariableValues: p.Variables,

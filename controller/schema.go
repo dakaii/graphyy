@@ -78,10 +78,8 @@ func (h *BaseHandler) getRootQuery() *graphql.Object {
 				}),
 				Description: "Get the logged-in user's info",
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-					// token := params.Context.Value("token").(string)
-					// id, _ := params.Args["id"].(string)
-					// return id, nil
-					return nil, nil
+					user := params.Context.Value("currentUser").(model.User)
+					return user.Username, nil
 				},
 			},
 		},
