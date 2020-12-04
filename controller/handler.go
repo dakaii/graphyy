@@ -8,9 +8,14 @@ import (
 	"log"
 	"net/http"
 
-	// "github.com/samsarahq/thunder/graphql"
 	"github.com/graphql-go/graphql"
 )
+
+type contextKey string
+
+func (c contextKey) String() string {
+	return "controller context key " + string(c)
+}
 
 type postData struct {
 	Query     string                 `json:"query"`
@@ -47,12 +52,10 @@ func (h *BaseHandler) GraphqlHandlfunc(w http.ResponseWriter, req *http.Request)
 		return
 	}
 	token := req.Header.Get("token")
-	fmt.Println(token)
-	// TODO write a function that decodes the token and return the original user instance.
 	user, _ := verifyJWT(token)
 
 	result := graphql.Do(graphql.Params{
-		Context:        context.WithValue(context.Background(), "currentUser", user),
+		Context:        context.WithValue(context.Background(), contextKey("currentUser"), user),
 		Schema:         h.Schema(),
 		RequestString:  p.Query,
 		VariableValues: p.Variables,

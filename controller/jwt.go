@@ -41,6 +41,7 @@ func verifyJWT(tknStr string) (model.User, error) {
 	token, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(envvar.AuthSecret()), nil
 	})
+
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
 			return model.User{}, errors.New("signature invalid")
@@ -52,11 +53,20 @@ func verifyJWT(tknStr string) (model.User, error) {
 	}
 	fmt.Println("TOKEN is:", token.Valid)
 
-	// for key, val := range claims {
-	// 	fmt.Printf("Key: %v, value: %v\n", key, val)
-	// }
-	data := claims["data"].(map[string]interface{})
-	username := data["username"].(string)
-	createdAt := data["createdAt"].(time.Time)
+	decoded := claims["data"].(map[string]interface{})
+	var username string
+	if keyExists(decoded, "username") {
+		username = decoded["username"].(string)
+	}
+
+	var createdAt time.Time
+	if keyExists(decoded, "createdAt") {
+		createdAt = decoded["createdAt"].(time.Time)
+	}
 	return model.User{Username: username, CreatedAt: createdAt}, nil
+}
+
+func keyExists(decoded map[string]interface{}, key string) bool {
+	val, ok := decoded[key]
+	return ok && val != nil
 }

@@ -56,7 +56,11 @@ func (h *BaseHandler) getRootMutation() *graphql.Object {
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					username, _ := params.Args["username"].(string)
 					password, _ := params.Args["password"].(string)
-					return h.login(model.User{Username: username, Password: password})
+					res, err := h.login(model.User{Username: username, Password: password})
+					if err != nil {
+						return nil, err
+					}
+					return res, nil
 				},
 			},
 		},
@@ -78,7 +82,7 @@ func (h *BaseHandler) getRootQuery() *graphql.Object {
 				}),
 				Description: "Get the logged-in user's info",
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-					user := params.Context.Value("currentUser").(model.User)
+					user := params.Context.Value(contextKey("currentUser")).(model.User)
 					return user.Username, nil
 				},
 			},
