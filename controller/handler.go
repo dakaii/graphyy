@@ -4,7 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"graphyy/repository"
+	"graphyy/internal"
+	"graphyy/repository/userrepo"
 	"log"
 	"net/http"
 
@@ -25,11 +26,11 @@ type postData struct {
 
 // BaseHandler contains all the repositories
 type BaseHandler struct {
-	userRepo repository.UserRepository
+	userRepo userrepo.UserRepository
 }
 
 // NewBaseHandler returns a new BaseHandler
-func NewBaseHandler(userRepo repository.UserRepository) *BaseHandler {
+func NewBaseHandler(userRepo userrepo.UserRepository) *BaseHandler {
 	return &BaseHandler{
 		userRepo: userRepo,
 	}
@@ -52,7 +53,7 @@ func (h *BaseHandler) GraphqlHandlfunc(w http.ResponseWriter, req *http.Request)
 		return
 	}
 	token := req.Header.Get("token")
-	user, _ := verifyJWT(token)
+	user, _ := internal.VerifyJWT(token)
 
 	result := graphql.Do(graphql.Params{
 		Context:        context.WithValue(context.Background(), contextKey("currentUser"), user),

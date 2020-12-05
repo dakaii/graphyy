@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"graphyy/controller"
 	"graphyy/database"
-	"graphyy/repository"
+	"graphyy/repository/userrepo"
 	"log"
 	"net/http"
 	"os"
@@ -20,7 +20,7 @@ func main() {
 	}
 
 	db := database.GetDatabase()
-	userRepo := repository.NewUserRepo(db)
+	userRepo := userrepo.NewUserRepo(db)
 	h := controller.NewBaseHandler(userRepo)
 
 	router := mux.NewRouter()

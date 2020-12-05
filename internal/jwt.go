@@ -1,4 +1,4 @@
-package controller
+package internal
 
 import (
 	"errors"
@@ -11,7 +11,7 @@ import (
 )
 
 // TODO move this file to another package. (make a new package)
-func generateJWT(user model.User) model.AuthToken {
+func GenerateJWT(user model.User) model.AuthToken {
 	secret := envvar.AuthSecret()
 	expiresAt := time.Now().Add(time.Minute * 15).Unix()
 
@@ -35,7 +35,7 @@ func generateJWT(user model.User) model.AuthToken {
 	}
 }
 
-func verifyJWT(tknStr string) (model.User, error) {
+func VerifyJWT(tknStr string) (model.User, error) {
 
 	claims := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
