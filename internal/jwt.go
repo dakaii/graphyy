@@ -53,7 +53,11 @@ func VerifyJWT(tknStr string) (model.User, error) {
 	}
 	fmt.Println("TOKEN is:", token.Valid)
 
-	decoded := claims["data"].(map[string]interface{})
+	decoded := make(map[string]interface{})
+	for key, val := range claims {
+		decoded[key] = val
+	}
+	// decoded := claims["data"].([]interface{})
 	var username string
 	if keyExists(decoded, "username") {
 		username = decoded["username"].(string)
