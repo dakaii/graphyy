@@ -10,12 +10,10 @@ import (
 
 // User struct
 type User struct {
-	ID        uint           `gorm:"primary_key" json:"id" graphql:"-"`
-	CreatedAt time.Time      `json:"createdAt" graphql:"-"`
-	UpdatedAt time.Time      `json:"updatedAt" graphql:"-"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt" graphql:"-"`
-	Username  string         `gorm:"unique;index; not null" json:"username" graphql:"username"`
-	Password  string         `gorm:"type:varchar(1000); not null" json:"password" graphql:"password"`
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
+	Username  string         `gorm:"unique;index;not null" json:"username"`
+	Password  string         `gorm:"type:varchar(1000);not null" json:"password"`
 }
-
-// https://github.com/graphql-go/graphql/blob/master/examples/todo/schema/schema.go

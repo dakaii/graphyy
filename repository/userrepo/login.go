@@ -11,7 +11,7 @@ import (
 // Login returns a jwt.
 func (repo *UserRepo) Login(user model.User) (model.AuthToken, error) {
 	existingUser := repo.getExistingUser(user.Username)
-	if existingUser.Username != "" {
+	if existingUser.Username == "" {
 		return model.AuthToken{}, errors.New("No user found with the inputted username")
 	}
 	isValid := checkPasswordHash(user.Password, existingUser.Password)
