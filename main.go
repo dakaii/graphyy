@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"graphyy/controller"
 	"graphyy/database"
-	"graphyy/repository/userrepo"
+	"graphyy/repository"
 	"net/http"
 	"os"
 )
@@ -16,19 +16,13 @@ func main() {
 	}
 
 	db := database.GetDatabase()
-	userRepo := userrepo.NewUserRepo(db)
-	h := controller.NewBaseHandler(userRepo)
+	repos := repository.InitRepositories(db)
+	controllers := controller.InitControllers(repos)
+	schema := controller.Schema(controllers)
 
-	http.Handle("/graphql", h.GraphqlHandlfunc())
+	http.Handle("/graphql", controller.GraphqlHandlfunc(schema))
 
 	fmt.Println("server is started at: http://localhost:/" + port + "/")
 	fmt.Println("graphql api server is started at: http://localhost:" + port + "/graphql")
 	http.ListenAndServe(":"+port, nil)
-	// router := mux.NewRouter()
-	// router.HandleFunc("/graphql", h.GraphqlHandlfunc)
-	// headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
-	// originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
-	// methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
-	// fmt.Println("Now server is running on port :" + port)
-	// log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 }

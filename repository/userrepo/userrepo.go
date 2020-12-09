@@ -10,10 +10,8 @@ import (
 
 // UserRepository maybe I should rename this interface
 type UserRepository interface {
-	// getExistingUser(username string) model.User
-	// saveUser(user model.User) (model.User, error)
-	Login(user model.User) (model.AuthToken, error)
-	Signup(user model.User) (model.AuthToken, error)
+	GetExistingUser(username string) model.User
+	CreateUser(user model.User) (model.User, error)
 }
 
 // UserRepo should i rename it?
@@ -29,14 +27,14 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 }
 
 // GetExistingUser fetches a user by the username from the db and returns it.
-func (repo *UserRepo) getExistingUser(username string) model.User {
+func (repo *UserRepo) GetExistingUser(username string) model.User {
 	var user model.User
 	repo.db.Where("username = ?", username).First(&user)
 	return user
 }
 
-// SaveUser creates a new user in the db..
-func (repo *UserRepo) saveUser(user model.User) (model.User, error) {
+// CreateUser creates a new user in the db..
+func (repo *UserRepo) CreateUser(user model.User) (model.User, error) {
 	// TODO handle the potential error below.
 	hashedPass, _ := hashPassword(user.Password)
 	user.Password = hashedPass

@@ -1,4 +1,4 @@
-package userrepo
+package user
 
 import (
 	"errors"
@@ -7,15 +7,15 @@ import (
 )
 
 // Signup lets users sign up for this application and returns a jwt.
-func (repo *UserRepo) Signup(user model.User) (model.AuthToken, error) {
+func (c *UserController) Signup(user model.User) (model.AuthToken, error) {
 	if !isValidUsername(user.Username) {
 		return model.AuthToken{}, errors.New("Invalid username")
 	}
-	existingUser := repo.getExistingUser(user.Username)
+	existingUser := c.userRepository.GetExistingUser(user.Username)
 	if existingUser.Username != "" {
 		return model.AuthToken{}, errors.New("this username is already in use")
 	}
-	user, err := repo.saveUser(user)
+	user, err := c.userRepository.CreateUser(user)
 	if err != nil {
 		return model.AuthToken{}, err
 	}

@@ -1,4 +1,4 @@
-package userrepo
+package user
 
 import (
 	"errors"
@@ -9,8 +9,8 @@ import (
 )
 
 // Login returns a jwt.
-func (repo *UserRepo) Login(user model.User) (model.AuthToken, error) {
-	existingUser := repo.getExistingUser(user.Username)
+func (c *UserController) Login(user model.User) (model.AuthToken, error) {
+	existingUser := c.userRepository.GetExistingUser(user.Username)
 	if existingUser.Username == "" {
 		return model.AuthToken{}, errors.New("No user found with the inputted username")
 	}

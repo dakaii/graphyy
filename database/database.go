@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"graphyy/envvar"
+	"graphyy/internal/envvar"
 	"graphyy/model"
 
 	"gorm.io/driver/postgres"
@@ -25,13 +25,3 @@ func GetDatabase() *gorm.DB {
 	db.AutoMigrate(&model.User{})
 	return db
 }
-
-// func createPgDb(port string, host string, user string, password string, dbname string) {
-// 	cmd := exec.Command("createdb", "-p", port, "-h", host, "-U", user, "-W", password, "-e", dbname)
-// 	var out bytes.Buffer
-// 	cmd.Stdout = &out
-// 	if err := cmd.Run(); err != nil {
-// 		log.Printf("Error: %v", err)
-// 	}
-// 	log.Printf("Output: %q\n", out.String())
-// }

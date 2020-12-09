@@ -3,7 +3,7 @@ package internal
 import (
 	"errors"
 	"fmt"
-	"graphyy/envvar"
+	"graphyy/internal/envvar"
 	"graphyy/model"
 	"time"
 

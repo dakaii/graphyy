@@ -22,7 +22,7 @@ var authType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
-func (h *BaseHandler) getRootMutation() *graphql.Object {
+func getRootMutation(contrs *Controllers) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "RootMutation",
 		Fields: graphql.Fields{
@@ -40,7 +40,7 @@ func (h *BaseHandler) getRootMutation() *graphql.Object {
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					username, _ := params.Args["username"].(string)
 					password, _ := params.Args["password"].(string)
-					res, err := h.userRepo.Signup(model.User{Username: username, Password: password})
+					res, err := contrs.userController.Signup(model.User{Username: username, Password: password})
 					if err != nil {
 						return nil, gqlerrors.FormatError(err)
 					}
@@ -61,7 +61,7 @@ func (h *BaseHandler) getRootMutation() *graphql.Object {
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					username, _ := params.Args["username"].(string)
 					password, _ := params.Args["password"].(string)
-					res, err := h.userRepo.Login(model.User{Username: username, Password: password})
+					res, err := contrs.userController.Login(model.User{Username: username, Password: password})
 					if err != nil {
 						return nil, gqlerrors.FormatError(err)
 					}
@@ -72,7 +72,7 @@ func (h *BaseHandler) getRootMutation() *graphql.Object {
 	})
 }
 
-func (h *BaseHandler) getRootQuery() *graphql.Object {
+func getRootQuery(contrs *Controllers) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "RootQuery",
 		Fields: graphql.Fields{
