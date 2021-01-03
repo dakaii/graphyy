@@ -8,12 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// UserRepository maybe I should rename this interface
-type UserRepository interface {
-	GetExistingUser(username string) model.User
-	CreateUser(user model.User) (model.User, error)
-}
-
 // UserRepo should i rename it?
 type UserRepo struct {
 	db *gorm.DB

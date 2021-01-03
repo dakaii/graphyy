@@ -9,8 +9,8 @@ import (
 )
 
 // Login returns a jwt.
-func (c *UserController) Login(user model.User) (model.AuthToken, error) {
-	existingUser := c.userRepository.GetExistingUser(user.Username)
+func (c *Controller) Login(user model.User) (model.AuthToken, error) {
+	existingUser := c.service.GetExistingUser(user.Username)
 	if existingUser.Username == "" {
 		return model.AuthToken{}, errors.New("No user found with the inputted username")
 	}
