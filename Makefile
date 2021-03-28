@@ -1,5 +1,6 @@
 .PHONY: build up down
 build:
+	env GOOS=linux GOARCH=386 go build -o build .
 	docker-compose build
 up:
 	env GOOS=linux GOARCH=386 go build -o build .

@@ -28,7 +28,7 @@ func DBPassword() string {
 }
 
 func DBName() string {
-	dbname, exists := os.LookupEnv("POSTGRES_DB_NAME")
+	dbname, exists := os.LookupEnv("POSTGRES_DB")
 	if !exists {
 		dbname = "postgres"
 	}
@@ -45,7 +45,7 @@ func DBHost() string {
 func DBPort() string {
 	port, exists := os.LookupEnv("POSTGRES_PORT")
 	if !exists {
-		port = "5432"
+		port = "5431"
 	}
 	return port
 }

@@ -16,6 +16,8 @@ services:
     image: postgres:latest
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5431:5432"
     env_file:
       - config.conf
 

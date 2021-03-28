@@ -19,9 +19,11 @@ func GetDatabase() *gorm.DB {
 	dbport := envvar.DBPort()
 
 	dsn := fmt.Sprintf(
-		"user=%s password=%s dbname=%s host=%s port=%s sslmode=disable TimeZone=Asia/Tokyo",
-		user, password, dbname, dbhost, dbport)
-	db, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Tokyo", dbhost, user, password, dbname, dbport)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+        panic(err)
+    }
 	db.AutoMigrate(&model.User{})
 	return db
 }
