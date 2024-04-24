@@ -2,38 +2,40 @@ package testing
 
 import (
 	"bytes"
+	"fmt"
 	"graphyy/controller"
 	"graphyy/database"
+	"graphyy/repository"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateUser(t *testing.T) {
-	collectionName, exists := os.LookupEnv("MONGODB_COLLECTION_NAME")
-	if !exists {
-		collectionName = "testingCollection"
-	}
+	db := database.GetDatabase()
+	repos := repository.InitRepositories(db)
+	controllers := controller.InitControllers(repos)
+	schema := controller.Schema(controllers)
+	jsonStr := []byte(`{
+        "query": "mutation { signup(username: \"secondtestuser\", password: \"testpass\") { user { id, username } } }"
+    }`)
 
-	ctx, db := database.GetDatabase(collectionName)
-	userRepo := database.NewUserRepo(db, ctx, db.Collection(collectionName))
-	h := controller.NewBaseHandler(userRepo)
-
-	jsonStr := []byte(`{"username":"secondtestuser","password":"testpass"}`)
-
-	req, err := http.NewRequest("POST", "/signup", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/test-graphql", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	// handler := http.HandlerFunc(h.Signup)
-	// handler.ServeHTTP(rr, req)
-	// if status := rr.Code; status != http.StatusOK {
-	// 	t.Errorf("handler returned wrong status code: got %v want %v",
-	// 		status, http.StatusOK)
-	// }
+
+	handler := controller.GraphqlHandlfunc(schema)
+	handler.ServeHTTP(rr, req)
+	assert.Equal(t, http.StatusOK, rr.Code)
+	fmt.Println(rr.Body.String())
+	fmt.Println("sadf")
+	// assert.Equal(t, `Bearer`, rr.Body.)
+
 	// res := model.AuthToken{}
 	// json.Unmarshal([]byte(rr.Body.String()), &res)
 

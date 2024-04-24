@@ -1,16 +1,16 @@
-version: "3.7"
+version: "3.8"
 services:
   backend:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     command: ./build
-    volumes:
-      - .:/code
     ports:
       - "8081:8081"
     depends_on:
       - postgres-local
     env_file:
-      - config.conf
+      - config/development.conf
 
   postgres-local:
     image: postgres:latest
@@ -19,17 +19,17 @@ services:
     ports:
       - "5431:5432"
     env_file:
-      - config.conf
+      - config/development.conf
 
   test:
-    build: .
-    command: ./testing.test
-    volumes:
-      - .:/code
+    build:
+      context: .
+      dockerfile: Dockerfile.testing
+    working_dir: /app
     depends_on:
       - postgres-local
     env_file:
-      - config.conf
+      - config/test.conf
 
-volumes: 
+volumes:
   postgres_data:

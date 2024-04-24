@@ -2,21 +2,21 @@ package user
 
 import (
 	"errors"
+	"graphyy/entity"
 	"graphyy/internal"
-	"graphyy/model"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 // Login returns a jwt.
-func (c *Controller) Login(user model.User) (model.AuthToken, error) {
+func (c *Controller) Login(user entity.User) (entity.AuthToken, error) {
 	existingUser := c.service.GetExistingUser(user.Username)
 	if existingUser.Username == "" {
-		return model.AuthToken{}, errors.New("No user found with the inputted username")
+		return entity.AuthToken{}, errors.New("No user found with the inputted username")
 	}
 	isValid := checkPasswordHash(user.Password, existingUser.Password)
 	if !isValid {
-		return model.AuthToken{}, errors.New("Invalid Credentials")
+		return entity.AuthToken{}, errors.New("Invalid Credentials")
 	}
 
 	token := internal.GenerateJWT(user)

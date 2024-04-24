@@ -2,7 +2,7 @@ package userrepo
 
 import (
 	"fmt"
-	"graphyy/model"
+	"graphyy/entity"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -21,22 +21,24 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 }
 
 // GetExistingUser fetches a user by the username from the db and returns it.
-func (repo *UserRepo) GetExistingUser(username string) model.User {
-	var user model.User
+func (repo *UserRepo) GetExistingUser(username string) entity.User {
+	var user entity.User
 	repo.db.Where("username = ?", username).First(&user)
 	return user
 }
 
 // CreateUser creates a new user in the db..
-func (repo *UserRepo) CreateUser(user model.User) (model.User, error) {
-	// TODO handle the potential error below.
-	hashedPass, _ := hashPassword(user.Password)
+func (repo *UserRepo) CreateUser(user entity.User) (entity.User, error) {
+	hashedPass, err := hashPassword(user.Password)
+	if err != nil {
+		return entity.User{}, err
+	}
 	user.Password = hashedPass
 
 	result := repo.db.Create(&user)
-	fmt.Println(result)
-	// result := h.db.Create(&user)
-	// if result.Error
+	if result.Error != nil {
+		return entity.User{}, result.Error
+	}
 	fmt.Println("Inserted a user with ID:", user.ID)
 	return user, nil
 }
