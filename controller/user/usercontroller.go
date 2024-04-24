@@ -1,14 +1,14 @@
 package user
 
 import (
-	"graphyy/model"
+	"graphyy/entity"
 	"graphyy/repository/userrepo"
 )
 
 // declaring the repository interface in the controller package allows us to easily swap out the actual implementation, enforcing loose coupling.
 type repository interface {
-	GetExistingUser(username string) model.User
-	CreateUser(user model.User) (model.User, error)
+	GetExistingUser(username string) entity.User
+	CreateUser(user entity.User) (entity.User, error)
 }
 
 // Controller contains the service, which contains database-related logic, as an injectable dependency, allowing us to decouple business logic from db logic.

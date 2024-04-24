@@ -3,21 +3,21 @@ package internal
 import (
 	"errors"
 	"fmt"
+	"graphyy/entity"
 	"graphyy/internal/envvar"
-	"graphyy/model"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
 // TODO move this file to another package. (make a new package)
-func GenerateJWT(user model.User) model.AuthToken {
+func GenerateJWT(user entity.User) entity.AuthToken {
 	secret := envvar.AuthSecret()
 	expiresAt := time.Now().Add(time.Minute * 15).Unix()
 
 	token := jwt.New(jwt.SigningMethodHS256)
 
-	token.Claims = &model.AuthTokenClaim{
+	token.Claims = &entity.AuthTokenClaim{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiresAt,
 		},
@@ -28,14 +28,14 @@ func GenerateJWT(user model.User) model.AuthToken {
 	if error != nil {
 		fmt.Println(error)
 	}
-	return model.AuthToken{
+	return entity.AuthToken{
 		Token:     tokenString,
 		TokenType: "Bearer",
 		ExpiresIn: expiresAt,
 	}
 }
 
-func VerifyJWT(tknStr string) (model.User, error) {
+func VerifyJWT(tknStr string) (entity.User, error) {
 
 	claims := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
@@ -44,12 +44,12 @@ func VerifyJWT(tknStr string) (model.User, error) {
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			return model.User{}, errors.New("signature invalid")
+			return entity.User{}, errors.New("signature invalid")
 		}
-		return model.User{}, errors.New("could not parse the auth token")
+		return entity.User{}, errors.New("could not parse the auth token")
 	}
 	if !token.Valid {
-		return model.User{}, errors.New("Invalid token")
+		return entity.User{}, errors.New("Invalid token")
 	}
 	fmt.Println("TOKEN is:", token.Valid)
 
@@ -67,7 +67,7 @@ func VerifyJWT(tknStr string) (model.User, error) {
 	if keyExists(decoded, "createdAt") {
 		createdAt = decoded["createdAt"].(time.Time)
 	}
-	return model.User{Username: username, CreatedAt: createdAt}, nil
+	return entity.User{Username: username, CreatedAt: createdAt}, nil
 }
 
 func keyExists(decoded map[string]interface{}, key string) bool {

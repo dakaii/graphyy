@@ -1,44 +1,24 @@
 package testing
 
 import (
-	"bytes"
-	"graphyy/controller"
-	"graphyy/database"
-	"net/http"
-	"os"
 	"testing"
 )
 
-func TestUserLogin(t *testing.T) {
-	collectionName, exists := os.LookupEnv("MONGODB_COLLECTION_NAME")
-	if !exists {
-		collectionName = "testingCollection"
-	}
-
-	ctx, db := database.GetDatabase(collectionName)
-	userRepo := database.NewUserRepo(db, ctx, db.Collection(collectionName))
-	h := controller.NewBaseHandler(userRepo)
-
-	jsonStr := []byte(`{"username":"testuser","password":"testpass"}`)
-
-	req, err := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonStr))
-	if err != nil {
-		t.Fatal(err)
-	}
-	// req.Header.Set("Content-Type", "application/json")
-	// rr := httptest.NewRecorder()
-	// handler := http.HandlerFunc(h.Login)
-	// handler.ServeHTTP(rr, req)
-	// if status := rr.Code; status != http.StatusOK {
-	// 	t.Errorf("handler returned wrong status code: got %v want %v",
-	// 		status, http.StatusOK)
+func TestLogin(t *testing.T) {
+	// user := entity.User{
+	// 	Username: "testuser",
+	// 	Password: "testpassword",
 	// }
-	// res := model.AuthToken{}
-	// json.Unmarshal([]byte(rr.Body.String()), &res)
 
-	// expected := `Bearer`
-	// if res.TokenType != expected {
-	// 	t.Errorf("handler returned unexpected body: got %v want %v",
-	// 		rr.Body.String(), expected)
+	// // Test successful login
+	// success := user.Login("testuser", "testpassword")
+	// if !success {
+	// 	t.Errorf("Expected login with correct credentials to succeed, but it failed.")
+	// }
+
+	// // Test unsuccessful login
+	// success = user.Login("wronguser", "wrongpassword")
+	// if success {
+	// 	t.Errorf("Expected login with incorrect credentials to fail, but it succeeded.")
 	// }
 }

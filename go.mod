@@ -1,31 +1,44 @@
 module graphyy
 
-go 1.14
+go 1.22
 
 require (
-	github.com/aws/aws-sdk-go v1.35.20 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/gofrs/uuid v3.3.0+incompatible // indirect
-	github.com/gogo/protobuf v1.3.1 // indirect
-	github.com/gorilla/handlers v1.5.1
-	github.com/gorilla/mux v1.8.0
-	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/graphql-go/graphql v0.7.9
 	github.com/graphql-go/handler v0.2.3
+	github.com/stretchr/testify v1.9.0
+	golang.org/x/crypto v0.22.0
+	gorm.io/driver/postgres v1.5.7
+	gorm.io/gorm v1.25.7-0.20240204074919-46816ad31dde
+)
+
+require (
+	github.com/jackc/pgx/v5 v5.5.5 // indirect
+	github.com/jackc/puddle/v2 v2.2.1 // indirect
+	github.com/mfridman/interpolate v0.0.2 // indirect
+	github.com/sethvargo/go-retry v0.2.4 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/gofrs/uuid v3.3.0+incompatible // indirect
+	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
+	github.com/jackc/pgconn v1.8.1 // indirect
+	github.com/jackc/pgio v1.0.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgproto3/v2 v2.0.7 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
+	github.com/jackc/pgtype v1.7.0 // indirect
 	github.com/jackc/pgx/v4 v4.11.0 // indirect
-	github.com/kr/text v0.2.0 // indirect
-	github.com/lib/pq v1.9.0 // indirect
-	github.com/rakyll/statik v0.1.7 // indirect
-	github.com/samsarahq/go v0.0.0-20191220233105-8077c9fbaed5 // indirect
-	github.com/samsarahq/thunder v0.5.0
-	github.com/shopspring/decimal v1.2.0 // indirect
-	go.mongodb.org/mongo-driver v1.4.2
-	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
-	golang.org/x/text v0.3.5 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
-	gorm.io/driver/postgres v1.0.8
-	gorm.io/gorm v1.21.6
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/lib/pq v1.10.9 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/pressly/goose/v3 v3.20.0
+	github.com/shopspring/decimal v1.3.1 // indirect
+	golang.org/x/text v0.14.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

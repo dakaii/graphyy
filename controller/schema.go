@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"graphyy/model"
+	"graphyy/entity"
 
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
@@ -22,7 +22,7 @@ var authType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
-func getRootMutation(contrs *Controllers) *graphql.Object {
+func getRootMutation(controllers *Controllers) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "RootMutation",
 		Fields: graphql.Fields{
@@ -40,7 +40,7 @@ func getRootMutation(contrs *Controllers) *graphql.Object {
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					username, _ := params.Args["username"].(string)
 					password, _ := params.Args["password"].(string)
-					res, err := contrs.userController.Signup(model.User{Username: username, Password: password})
+					res, err := controllers.userController.Signup(entity.User{Username: username, Password: password})
 					if err != nil {
 						return nil, gqlerrors.FormatError(err)
 					}
@@ -61,7 +61,7 @@ func getRootMutation(contrs *Controllers) *graphql.Object {
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					username, _ := params.Args["username"].(string)
 					password, _ := params.Args["password"].(string)
-					res, err := contrs.userController.Login(model.User{Username: username, Password: password})
+					res, err := controllers.userController.Login(entity.User{Username: username, Password: password})
 					if err != nil {
 						return nil, gqlerrors.FormatError(err)
 					}
@@ -72,7 +72,7 @@ func getRootMutation(contrs *Controllers) *graphql.Object {
 	})
 }
 
-func getRootQuery(contrs *Controllers) *graphql.Object {
+func getRootQuery(_ *Controllers) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "RootQuery",
 		Fields: graphql.Fields{
@@ -89,7 +89,7 @@ func getRootQuery(contrs *Controllers) *graphql.Object {
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					// user := params.Context.Value(contextKey("currentUser")).(model.User)
 					rootValue := params.Info.RootValue.(map[string]interface{})
-					user := rootValue["currentUser"].(model.User)
+					user := rootValue["currentUser"].(entity.User)
 					return user.Username, nil
 				},
 			},
