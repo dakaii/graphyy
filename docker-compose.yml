@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ./build
+    volumes:
+      - .:/code
     ports:
       - "8081:8081"
     depends_on:
@@ -25,7 +27,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.testing
-    working_dir: /app
     depends_on:
       - postgres-local
     env_file:

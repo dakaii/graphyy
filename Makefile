@@ -7,8 +7,10 @@ migrate:
 	goose -dir ./migrations up
 
 build:
+	env GOOS=linux GOARCH=386 go build -o build ./cmd/server/main.go
 	docker-compose build
 up:
+	env GOOS=linux GOARCH=386 go build -o build ./cmd/server/main.go
 	docker-compose up backend && docker-compose rm -fsv
 down:
 	docker-compose down --volumes
