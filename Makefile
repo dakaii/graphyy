@@ -29,9 +29,6 @@ test:
 binary:
 	env GOOS=linux GOARCH=386 go build -o build ./cmd/server/main.go
 
-test-binary:
-	env GOOS=linux GOARCH=386 go test -c testing
-
 clean-containers:
 	docker rm -f $(docker ps -a -q)
 
