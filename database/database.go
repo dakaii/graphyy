@@ -22,8 +22,7 @@ func GetDatabase() *gorm.DB {
 	dbport := envvar.DBPort()
 
 	isTestMode := dbname == "graphyy_test"
-	isDevelopmentMode := dbname == "graphyy_development"
-	if isTestMode || isDevelopmentMode {
+	if isTestMode {
 		psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s sslmode=disable", dbhost, dbport, user, password)
 		db, err := sql.Open("postgres", psqlInfo)
 		if err != nil {

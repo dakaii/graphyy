@@ -10,11 +10,12 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - postgres-local
+      - postgresql
     env_file:
       - config/development.conf
 
-  postgres-local:
+  postgresql:
+    container_name: postgresql-local
     image: postgres:latest
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -28,7 +29,7 @@ services:
       context: .
       dockerfile: Dockerfile.testing
     depends_on:
-      - postgres-local
+      - postgresql
     env_file:
       - config/test.conf
 
