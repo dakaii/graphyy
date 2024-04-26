@@ -19,7 +19,7 @@ func TestCreateUser(t *testing.T) {
 	controllers := controller.InitControllers(repos)
 	schema := controller.Schema(controllers)
 	jsonStr := []byte(`{
-        "query": "mutation { signup(username: \"secondtestuser\", password: \"testpass\") { user { id, username } } }"
+        "query": "mutation { signup(username: \"secondtestuser\", password: \"testpass\") { token, tokenType } }"
     }`)
 
 	req, err := http.NewRequest("POST", "/test-graphql", bytes.NewBuffer(jsonStr))

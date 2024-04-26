@@ -28,6 +28,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.testing
+    volumes:
+      - .:/app
     depends_on:
       - postgresql
     env_file:
