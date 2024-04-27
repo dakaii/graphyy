@@ -7,10 +7,10 @@ migrate:
 	goose -dir ./migrations up
 
 create-dev-db:
-	docker exec -it postgresql-dev1 psql -U postgres -c "CREATE DATABASE graphyy_development;"
+	docker exec -it graphyy-postgresql-dev1 psql -U postgres -c "CREATE DATABASE graphyy_development;"
 
 drop-dev-db:
-	docker exec -it postgresql-dev1 psql -U postgres -c "DROP DATABASE graphyy_development;"
+	docker exec -it graphyy-postgresql-dev1 psql -U postgres -c "DROP DATABASE graphyy_development;"
 
 build:
 	env GOOS=linux GOARCH=386 go build -o build ./cmd/server/main.go
@@ -25,6 +25,9 @@ down:
 
 test:
 	docker-compose up test && docker-compose rm -fsv
+
+clear-test:
+	docker-compose rm -fsv
 	docker volume remove graphyy_postgres_test_data
 
 binary:

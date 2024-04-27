@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   backend:
+    container_name: graphyy-backend-dev1
     build:
       context: .
       dockerfile: Dockerfile
@@ -15,7 +16,7 @@ services:
       - config/development.conf
 
   postgresql-dev:
-    container_name: postgresql-dev1
+    container_name: graphyy-postgresql-dev1
     image: postgres:latest
     volumes:
       - postgres_dev_data:/var/lib/postgresql/data/
@@ -36,7 +37,7 @@ services:
       - config/test.conf
 
   postgresql-test:
-    container_name: postgresql-test1
+    container_name: graphyy-postgresql-test1
     image: postgres:latest
     volumes:
       - postgres_test_data:/var/lib/postgresql/data/
