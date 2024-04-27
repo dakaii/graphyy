@@ -12,19 +12,27 @@ func init() {
 }
 
 func upInit(ctx context.Context, tx *sql.Tx) error {
-	// dbname := envvar.DBName()
-	// _, err := tx.Exec("CREATE TABLE " + dbname)
-	// if err != nil {
-	// 	return err
-	// }
+	_, err := tx.Exec(`
+        CREATE TABLE users (
+            id UUID PRIMARY KEY,
+            created_at TIMESTAMP NOT NULL,
+            updated_at TIMESTAMP NOT NULL,
+            deleted_at TIMESTAMP,
+            username VARCHAR(255) UNIQUE NOT NULL,
+            password VARCHAR(1000) NOT NULL
+        );
+    `)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func downInit(ctx context.Context, tx *sql.Tx) error {
-	// dbname := envvar.DBName()
-	// _, err := tx.Exec("DROP TABLE " + dbname)
-	// if err != nil {
-	// 	return err
-	// }
+	_, err := tx.Exec("DROP TABLE users")
+	if err != nil {
+		return err
+	}
 	return nil
 }
