@@ -53,7 +53,6 @@ func TestLogin(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(rr)
 	assert.Equal(t, http.StatusOK, rr.Code)
 	assert.Equal(t, "Bearer", res.Data.Login.TokenType)
 	assert.NotEmpty(t, res.Data.Login.Token)

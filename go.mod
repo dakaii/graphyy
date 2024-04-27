@@ -5,6 +5,7 @@ go 1.22
 require (
 	github.com/bluele/factory-go v0.0.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/google/uuid v1.6.0
 	github.com/graphql-go/graphql v0.7.9
 	github.com/graphql-go/handler v0.2.3
 	github.com/stretchr/testify v1.9.0

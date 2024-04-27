@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/bluele/factory-go/factory"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -16,12 +17,11 @@ type passwordKey struct{}
 
 var UserFactory = factory.NewFactory(
 	&entity.User{},
-).SeqInt("ID", func(n int) (interface{}, error) {
-	uintN := uint(n)
-	return uintN, nil
+).Attr("ID", func(args factory.Args) (interface{}, error) {
+	return uuid.New(), nil
 }).Attr("Username", func(args factory.Args) (interface{}, error) {
 	user := args.Instance().(*entity.User)
-	return fmt.Sprintf("user-%d", user.ID), nil
+	return fmt.Sprintf("user-%s", user.ID.String()), nil
 }).Attr("Password", func(args factory.Args) (interface{}, error) {
 	password := args.Context().Value(passwordKey{}).(string)
 	hashedPassword, _ := userrepo.HashPassword(password)
@@ -43,7 +43,6 @@ func CreateUser(db *gorm.DB) *entity.User {
 		panic(err)
 	}
 	user := v.(*entity.User)
-	fmt.Println(user)
 	tx.Commit()
 	return user
 }
@@ -61,7 +60,6 @@ func CreateUsers(db *gorm.DB, n int) []*entity.User {
 		}
 		user := v.(*entity.User)
 		user.Password = password
-		fmt.Println(user)
 		tx.Commit()
 		users = append(users, user)
 	}
