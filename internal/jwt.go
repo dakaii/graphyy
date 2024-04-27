@@ -49,28 +49,51 @@ func VerifyJWT(tknStr string) (entity.User, error) {
 		return entity.User{}, errors.New("could not parse the auth token")
 	}
 	if !token.Valid {
-		return entity.User{}, errors.New("Invalid token")
+		return entity.User{}, errors.New("invalid token")
 	}
-	fmt.Println("TOKEN is:", token.Valid)
 
 	decoded := make(map[string]interface{})
 	for key, val := range claims {
 		decoded[key] = val
 	}
-	// decoded := claims["data"].([]interface{})
 	var username string
 	if keyExists(decoded, "username") {
 		username = decoded["username"].(string)
 	}
 
-	var createdAt time.Time
-	if keyExists(decoded, "createdAt") {
-		createdAt = decoded["createdAt"].(time.Time)
-	}
-	return entity.User{Username: username, CreatedAt: createdAt}, nil
+	// var createdAt time.Time
+	// if keyExists(decoded, "createdAt") {
+	// 	createdAt, err = parseTimeString(decoded["createdAt"])
+	// 	if err != nil {
+	// 		return entity.User{}, fmt.Errorf("could not parse createdAt time: %w", err)
+	// 	}
+	// }
+	return entity.User{Username: username}, nil
 }
 
 func keyExists(decoded map[string]interface{}, key string) bool {
 	val, ok := decoded[key]
 	return ok && val != nil
 }
+
+// func parseTimeString(param interface{}) (time.Time, error) {
+// 	timeStringTypes := []string{time.RFC3339, time.RFC3339Nano, "2006-01-02T15:04:05.999999999Z07:00", "2024-04-27T02:56:51.45722294Z"}
+// 	var t time.Time
+// 	var err error
+
+// 	switch v := param.(type) {
+// 	case string:
+// 		for _, timeStringType := range timeStringTypes {
+// 			t, err = time.Parse(timeStringType, v)
+// 		}
+// 		if t.IsZero() {
+// 			return time.Time{}, fmt.Errorf("could not parse string to time: %w", err)
+// 		}
+// 	case time.Time:
+// 		t = v
+// 	default:
+// 		return time.Time{}, errors.New("unsupported type for time parsing")
+// 	}
+
+// 	return t, nil
+// }

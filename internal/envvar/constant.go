@@ -1,6 +1,9 @@
 package envvar
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 // GetSecret returns the jwt secret.
 func AuthSecret() string {
@@ -48,4 +51,14 @@ func DBPort() string {
 		port = "5431"
 	}
 	return port
+}
+
+func HashCost() int {
+	costString, _ := os.LookupEnv("HASH_COST")
+	res, err := strconv.Atoi(costString)
+	if err != nil {
+		return 8
+	}
+
+	return res
 }

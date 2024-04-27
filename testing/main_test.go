@@ -14,10 +14,9 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	// fmt.Println("TestMain is running")
 	setup()
 
-	// // runs all tests in the package
+	// runs all tests in the package
 	exitCode := m.Run()
 
 	teardown()
@@ -59,5 +58,6 @@ func setup() {
 }
 
 func teardown() {
-	// TODO figure out a way to clear the test data in graphyy_test database
+	// TODO figure out a way to clear the test data in the graphyy_test database after the tests are done
+	// I coudn't figure out how to do this with gorm, so I'm running the following command in Makefile: docker volume remove graphyy_postgres_test_data
 }

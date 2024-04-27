@@ -3,6 +3,7 @@ package userrepo
 import (
 	"fmt"
 	"graphyy/entity"
+	"graphyy/internal/envvar"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -29,7 +30,7 @@ func (repo *UserRepo) GetExistingUser(username string) entity.User {
 
 // CreateUser creates a new user in the db..
 func (repo *UserRepo) CreateUser(user entity.User) (entity.User, error) {
-	hashedPass, err := hashPassword(user.Password)
+	hashedPass, err := HashPassword(user.Password)
 	if err != nil {
 		return entity.User{}, err
 	}
@@ -43,7 +44,8 @@ func (repo *UserRepo) CreateUser(user entity.User) (entity.User, error) {
 	return user, nil
 }
 
-func hashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+func HashPassword(password string) (string, error) {
+	cost := envvar.HashCost()
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), cost)
 	return string(bytes), err
 }

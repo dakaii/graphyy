@@ -7,7 +7,7 @@ import (
 // AuthToken struct
 type AuthToken struct {
 	TokenType string `json:"tokenType"`
-	Token     string `json:"accessToken"`
+	Token     string `json:"token"`
 	ExpiresIn int64  `json:"expiresIn"`
 }
 

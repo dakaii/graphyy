@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   backend:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     command: ./build
@@ -10,15 +10,15 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - postgresql
+      - postgresql-dev
     env_file:
       - config/development.conf
 
-  postgresql:
-    container_name: postgresql-local
+  postgresql-dev:
+    container_name: postgresql-dev1
     image: postgres:latest
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_dev_data:/var/lib/postgresql/data/
     ports:
       - "5431:5432"
     env_file:
@@ -31,9 +31,20 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - postgresql
+      - postgresql-test
+    env_file:
+      - config/test.conf
+
+  postgresql-test:
+    container_name: postgresql-test1
+    image: postgres:latest
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data/
+    ports:
+      - "5430:5432"
     env_file:
       - config/test.conf
 
 volumes:
-  postgres_data:
+  postgres_dev_data:
+  postgres_test_data:

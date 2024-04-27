@@ -2,9 +2,10 @@ package testing
 
 import (
 	"bytes"
-	"fmt"
+	"encoding/json"
 	"graphyy/controller"
 	"graphyy/database"
+	"graphyy/entity"
 	"graphyy/repository"
 	"net/http"
 	"net/http/httptest"
@@ -13,13 +14,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type SignUpResponse struct {
+	Data struct {
+		Signup entity.AuthToken `json:"signup"`
+	} `json:"data"`
+}
+
 func TestCreateUser(t *testing.T) {
 	db := database.GetDatabase()
 	repos := repository.InitRepositories(db)
 	controllers := controller.InitControllers(repos)
 	schema := controller.Schema(controllers)
 	jsonStr := []byte(`{
-        "query": "mutation { signup(username: \"secondtestuser\", password: \"testpass\") { token, tokenType } }"
+        "query": "mutation { signup(username: \"secondtestuser\", password: \"testpass\") { token, tokenType, expiresIn } }"
     }`)
 
 	req, err := http.NewRequest("POST", "/test-graphql", bytes.NewBuffer(jsonStr))
@@ -31,17 +38,15 @@ func TestCreateUser(t *testing.T) {
 
 	handler := controller.GraphqlHandlfunc(schema)
 	handler.ServeHTTP(rr, req)
+
+	var res SignUpResponse
+	err = json.Unmarshal(rr.Body.Bytes(), &res)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	assert.Equal(t, http.StatusOK, rr.Code)
-	fmt.Println(rr.Body.String())
-	fmt.Println("sadf")
-	// assert.Equal(t, `Bearer`, rr.Body.)
-
-	// res := model.AuthToken{}
-	// json.Unmarshal([]byte(rr.Body.String()), &res)
-
-	// expected := `Bearer`
-	// if res.TokenType != expected {
-	// 	t.Errorf("handler returned unexpected body: got %v want %v",
-	// 		rr.Body.String(), expected)
-	// }
+	assert.Equal(t, "Bearer", res.Data.Signup.TokenType)
+	assert.NotEmpty(t, res.Data.Signup.Token)
+	assert.NotEmpty(t, res.Data.Signup.ExpiresIn)
 }

@@ -3,13 +3,11 @@ package migrations
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/pressly/goose/v3"
 )
 
 func init() {
-	fmt.Println("asdf")
 	goose.AddMigrationContext(upInit, downInit)
 }
 
