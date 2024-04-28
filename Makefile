@@ -24,10 +24,9 @@ down:
 	docker-compose down --volumes
 
 test:
-	docker-compose up test && docker-compose rm -fsv
+	docker-compose up --build --abort-on-container-exit --force-recreate test && docker-compose rm -fsv
 
 clear-test:
-	docker-compose rm -fsv
 	docker volume remove graphyy_postgres_test_data
 
 binary:

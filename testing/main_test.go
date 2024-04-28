@@ -52,12 +52,13 @@ func setup() {
 	if err != nil {
 		panic(err)
 	}
+	// TODO create a docker image for goose, add that to docker-compose.yml and run the migrations using goose prior to running the tests
 	if isTestMode {
 		gormDB.AutoMigrate(&entity.User{})
 	}
 }
 
-func teardown() {
+func truncateAllTables() {
 	password := envvar.DBPassword()
 	dbname := envvar.DBName()
 	dbhost := envvar.DBHost()
@@ -91,4 +92,8 @@ func teardown() {
 	if err != nil {
 		log.Println("Failed to delete all rows from all tables:", err)
 	}
+}
+
+func teardown() {
+	truncateAllTables()
 }
