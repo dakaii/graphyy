@@ -12,9 +12,9 @@ import (
 	"graphyy/testing/factory"
 	"net/http"
 	"net/http/httptest"
-	"testing"
 
-	"github.com/stretchr/testify/assert"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 type LogInResponse struct {
@@ -23,38 +23,49 @@ type LogInResponse struct {
 	} `json:"data"`
 }
 
-func TestLogin(t *testing.T) {
-	db := database.GetDatabase()
-	repos := repository.InitRepositories(db)
-	controllers := controller.InitControllers(repos)
-	schema := controller.Schema(controllers)
+var _ = Describe("Login", func() {
+	var (
+		users   []entity.User
+		rr      *httptest.ResponseRecorder
+		handler http.Handler
+	)
 
-	users := factory.CreateUsers(db, 5)
-	loginUser := users[0]
-	token := internal.GenerateJWT(*loginUser)
+	BeforeEach(func() {
+		db := database.GetDatabase()
+		repos := repository.InitRepositories(db)
+		controllers := controller.InitControllers(repos)
+		schema := controller.Schema(controllers)
+		handler = controller.GraphqlHandlfunc(schema)
 
-	query := fmt.Sprintf(`{ "query": "mutation { login(username: \"%s\", password: \"%s\") { token, tokenType, expiresIn } }" }`, loginUser.Username, loginUser.Password)
-	byteArray := []byte(query)
+		users = factory.CreateUsers(db, 5)
+		rr = httptest.NewRecorder()
+	})
 
-	req, err := http.NewRequest("POST", "/test-graphql", bytes.NewBuffer(byteArray))
-	if err != nil {
-		t.Fatal(err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token.Token))
-	rr := httptest.NewRecorder()
+	AfterEach(func() {
+		truncateAllTables()
+	})
 
-	handler := controller.GraphqlHandlfunc(schema)
-	handler.ServeHTTP(rr, req)
+	It("should login a user", func() {
+		loginUser := users[0]
+		token := internal.GenerateJWT(loginUser)
 
-	var res LogInResponse
-	err = json.Unmarshal(rr.Body.Bytes(), &res)
-	if err != nil {
-		t.Fatal(err)
-	}
+		query := fmt.Sprintf(`{ "query": "mutation { login(username: \"%s\", password: \"%s\") { token, tokenType, expiresIn } }" }`, loginUser.Username, loginUser.Password)
+		byteArray := []byte(query)
 
-	assert.Equal(t, http.StatusOK, rr.Code)
-	assert.Equal(t, "Bearer", res.Data.Login.TokenType)
-	assert.NotEmpty(t, res.Data.Login.Token)
-	assert.NotEmpty(t, res.Data.Login.ExpiresIn)
-}
+		req, err := http.NewRequest("POST", "/test-graphql", bytes.NewBuffer(byteArray))
+		Expect(err).NotTo(HaveOccurred())
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token.Token))
+
+		handler.ServeHTTP(rr, req)
+
+		var res LogInResponse
+		err = json.Unmarshal(rr.Body.Bytes(), &res)
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(rr.Code).To(Equal(http.StatusOK))
+		Expect(res.Data.Login.TokenType).To(Equal("Bearer"))
+		Expect(res.Data.Login.Token).To(BeAssignableToTypeOf(""))
+		Expect(res.Data.Login.ExpiresIn).To(BeAssignableToTypeOf(int64(0)))
+	})
+})

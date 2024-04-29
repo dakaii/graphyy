@@ -35,20 +35,20 @@ var UserFactory = factory.NewFactory(
 	return db.Create(args.Instance()).Error
 })
 
-func CreateUser(db *gorm.DB) *entity.User {
+func CreateUser(db *gorm.DB) entity.User {
 	tx := db.Begin()
 	ctx := context.WithValue(context.Background(), dbKey{}, tx)
 	v, err := UserFactory.CreateWithContext(ctx)
 	if err != nil {
 		panic(err)
 	}
-	user := v.(*entity.User)
+	user := *v.(*entity.User)
 	tx.Commit()
 	return user
 }
 
-func CreateUsers(db *gorm.DB, n int) []*entity.User {
-	var users []*entity.User
+func CreateUsers(db *gorm.DB, n int) []entity.User {
+	var users []entity.User
 	for i := 0; i < n; i++ {
 		tx := db.Begin()
 		ctx := context.WithValue(context.Background(), dbKey{}, tx)
@@ -58,7 +58,7 @@ func CreateUsers(db *gorm.DB, n int) []*entity.User {
 		if err != nil {
 			panic(err)
 		}
-		user := v.(*entity.User)
+		user := *v.(*entity.User)
 		user.Password = password
 		tx.Commit()
 		users = append(users, user)

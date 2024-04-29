@@ -6,23 +6,11 @@ import (
 	"graphyy/entity"
 	"graphyy/internal/envvar"
 	"log"
-	"os"
-	"testing"
 
+	. "github.com/onsi/ginkgo/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-func TestMain(m *testing.M) {
-	setup()
-
-	// runs all tests in the package
-	exitCode := m.Run()
-
-	teardown()
-
-	os.Exit(exitCode)
-}
 
 func setup() {
 	user := envvar.DBUser()
@@ -97,3 +85,11 @@ func truncateAllTables() {
 func teardown() {
 	truncateAllTables()
 }
+
+var _ = BeforeSuite(func() {
+	setup()
+})
+
+var _ = AfterSuite(func() {
+	teardown()
+})
