@@ -24,10 +24,10 @@ down:
 	docker-compose down --volumes
 
 test:
-	docker-compose build test
-	docker-compose up -d test
-	docker-compose exec test ginkgo -r $(filter-out $@,$(MAKECMDGOALS))
-	docker-compose rm -fsv
+	docker-compose -f docker-compose.test.yml build test
+	docker-compose -f docker-compose.test.yml up -d test
+	docker-compose -f docker-compose.test.yml exec -T test ginkgo -r $(filter-out $@,$(MAKECMDGOALS))
+	docker-compose -f docker-compose.test.yml rm -fsv
 
 clear-test:
 	docker volume remove graphyy_postgres_test_data

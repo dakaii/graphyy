@@ -15,6 +15,14 @@ jobs:
       with:
         go-version: 1.22
 
-    - name: Run tests
+    - name: Build the test
       run: |
-        make test
+        docker-compose -f docker-compose.test.yml build 
+    
+    - name: Run the test
+      run: |
+        docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+
+    - name: Clean up
+      run: |
+        docker-compose -f docker-compose.test.yml down --volumes
