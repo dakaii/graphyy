@@ -11,6 +11,8 @@ services:
       - postgresql-test
     env_file:
       - config/test.conf
+    networks:
+      - test-network
 
   postgresql-test:
     container_name: graphyy-postgresql-test1
@@ -21,6 +23,13 @@ services:
       - "5430:5432"
     env_file:
       - config/test.conf
+    networks:
+      - test-network
 
 volumes:
   postgres_test_data:
+
+
+networks:
+  test-network:
+    driver: bridge
