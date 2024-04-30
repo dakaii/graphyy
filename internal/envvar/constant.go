@@ -48,7 +48,7 @@ func DBHost() string {
 func DBPort() string {
 	port, exists := os.LookupEnv("POSTGRES_PORT")
 	if !exists {
-		port = "5431"
+		port = "5432"
 	}
 	return port
 }
