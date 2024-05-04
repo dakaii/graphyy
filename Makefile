@@ -4,7 +4,10 @@ create_migration:
 	goose -dir ./migrations create $(NAME)
 
 migrate:
-	goose -dir ./migrations up
+	docker-compose -f docker-compose.yml run --rm goose-dev bash -c "goose -dir ./migrations up"
+
+migrate-test-db:
+	docker-compose -f docker-compose.test.yml run --rm goose-test bash -c "goose -dir ./migrations up"
 
 create-dev-db:
 	docker exec -it graphyy-postgresql-dev1 psql -U postgres -c "CREATE DATABASE graphyy_development;"
@@ -22,9 +25,12 @@ up:
 	docker-compose up backend && docker-compose rm -fsv
 down:
 	docker-compose down --volumes
-
 test:
-	docker-compose -f docker-compose.test.yml build test
+	docker-compose -f docker-compose.test.yml build
+	docker-compose -f docker-compose.test.yml up -d postgresql-test
+	- docker-compose -f docker-compose.test.yml exec postgresql-test bash -c "until pg_isready; do sleep 5; done"
+	- docker-compose -f docker-compose.test.yml exec postgresql-test bash -c "psql -U postgres -c 'CREATE DATABASE graphyy_development;'"
+	- docker-compose -f docker-compose.test.yml run --rm goose-test bash -c "goose -dir ./migrations up"
 	docker-compose -f docker-compose.test.yml up -d test
 	docker-compose -f docker-compose.test.yml exec -T test ginkgo -r $(filter-out $@,$(MAKECMDGOALS))
 	docker-compose -f docker-compose.test.yml rm -fsv
@@ -40,3 +46,6 @@ clean-containers:
 
 clean-images:
 	docker image prune
+
+act:
+	act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest -W .github/workflows/unit-test.yml

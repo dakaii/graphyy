@@ -25,5 +25,15 @@ services:
     env_file:
       - config/development.conf
 
+  goose-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.goose
+    volumes:
+      - ./migrations:/app/migrations
+    env_file:
+      - config/development.conf
+    working_dir: /app
+
 volumes:
   postgres_dev_data:

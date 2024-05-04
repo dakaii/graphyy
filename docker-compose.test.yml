@@ -1,6 +1,5 @@
 version: "3.8"
 services:
-
   test:
     build:
       context: .
@@ -25,6 +24,18 @@ services:
       - config/test.conf
     networks:
       - test-network
+
+  goose-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.goose
+    volumes:
+      - ./migrations:/app/migrations
+    env_file:
+      - config/test.conf
+    networks:
+      - test-network
+    working_dir: /app
 
 volumes:
   postgres_test_data:
