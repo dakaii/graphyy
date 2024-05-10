@@ -1,6 +1,7 @@
 package userrepo
 
 import (
+	"errors"
 	"fmt"
 	"graphyy/entity"
 	"graphyy/internal/envvar"
@@ -22,10 +23,16 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 }
 
 // GetExistingUser fetches a user by the username from the db and returns it.
-func (repo *UserRepo) GetExistingUser(username string) entity.User {
+func (repo *UserRepo) GetExistingUser(username string) (entity.User, error) {
 	var user entity.User
-	repo.db.Where("username = ?", username).First(&user)
-	return user
+	result := repo.db.Where("username = ?", username).First(&user)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return entity.User{}, fmt.Errorf("no user found with username: %s", username)
+		}
+		return entity.User{}, result.Error
+	}
+	return user, nil
 }
 
 // CreateUser creates a new user in the db..

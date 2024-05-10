@@ -7,7 +7,7 @@ import (
 
 // declaring the repository interface in the controller package allows us to easily swap out the actual implementation, enforcing loose coupling.
 type repository interface {
-	GetExistingUser(username string) entity.User
+	GetExistingUser(username string) (entity.User, error)
 	CreateUser(user entity.User) (entity.User, error)
 }
 
