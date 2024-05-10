@@ -14,4 +14,4 @@ RUN go mod download
 COPY . .
 
 # Run the tests
-CMD ["go", "test" , "./...", "-v", "-cover", "-coverprofile=coverage.out"]
+CMD ["go", "test" , "./...", "-v", "-cover"]
