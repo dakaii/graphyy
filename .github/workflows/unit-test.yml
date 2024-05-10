@@ -41,7 +41,7 @@ jobs:
 
     - name: Run the test
       run: |
-        docker-compose -f docker-compose.test.yml run test
+        docker-compose -f docker-compose.test.yml run --rm test
 
     - name: Clean up
       run: |

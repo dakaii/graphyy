@@ -5,12 +5,11 @@ import (
 	"graphyy/internal/envvar"
 	"log"
 
-	. "github.com/onsi/ginkgo/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func truncateAllTables() {
+func TruncateAllTables() {
 	password := envvar.DBPassword()
 	dbname := envvar.DBName()
 	dbhost := envvar.DBHost()
@@ -45,15 +44,3 @@ func truncateAllTables() {
 		log.Println("Failed to delete all rows from all tables:", err)
 	}
 }
-
-func teardown() {
-	truncateAllTables()
-}
-
-var _ = BeforeSuite(func() {
-
-})
-
-var _ = AfterSuite(func() {
-	teardown()
-})

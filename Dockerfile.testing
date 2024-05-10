@@ -13,7 +13,5 @@ RUN go mod download
 # Copy the source from the current directory to the Working Directory inside the container
 COPY . .
 
-RUN go install github.com/onsi/ginkgo/ginkgo
-
 # Run the tests
-CMD ["ginkgo", "-r", "-v"]
+CMD ["go", "test" , "./...", "-v", "-cover", "-coverprofile=coverage.out"]

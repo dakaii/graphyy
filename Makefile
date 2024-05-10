@@ -31,8 +31,7 @@ test:
 	- docker-compose -f docker-compose.test.yml exec postgresql-test bash -c "until pg_isready; do sleep 5; done"
 	- docker-compose -f docker-compose.test.yml exec postgresql-test bash -c "psql -U postgres -c 'CREATE DATABASE graphyy_development;'"
 	- docker-compose -f docker-compose.test.yml run --rm goose-test bash -c "goose -dir ./migrations up"
-	docker-compose -f docker-compose.test.yml up -d test
-	docker-compose -f docker-compose.test.yml exec -T test ginkgo -r $(filter-out $@,$(MAKECMDGOALS))
+	- docker-compose -f docker-compose.test.yml run --rm test
 	docker-compose -f docker-compose.test.yml rm -fsv
 
 clear-test:

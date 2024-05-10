@@ -14,7 +14,6 @@ services:
       - test-network
 
   postgresql-test:
-    container_name: graphyy-postgresql-test1
     image: postgres:latest
     volumes:
       - postgres_test_data:/var/lib/postgresql/data/

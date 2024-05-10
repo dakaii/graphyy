@@ -3,18 +3,24 @@ package testing
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"graphyy/controller"
 	"graphyy/database"
 	"graphyy/entity"
-	"graphyy/internal"
 	"graphyy/repository"
-	"graphyy/testing/factory"
 	"net/http"
 	"net/http/httptest"
+	"testing"
 
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 )
+
+type SignUpTestSuite struct {
+	suite.Suite
+	rr      *httptest.ResponseRecorder
+	handler http.Handler
+}
 
 type SignUpResponse struct {
 	Data struct {
@@ -22,51 +28,43 @@ type SignUpResponse struct {
 	} `json:"data"`
 }
 
-var _ = Describe("CreateUser", func() {
-	var (
-		users   []entity.User
-		rr      *httptest.ResponseRecorder
-		handler http.Handler
-	)
+func (suite *SignUpTestSuite) SetupTest() {
+	db := database.GetDatabase()
+	repos := repository.InitRepositories(db)
+	controllers := controller.InitControllers(repos)
+	schema := controller.Schema(controllers)
+	suite.handler = controller.GraphqlHandlfunc(schema)
 
-	BeforeEach(func() {
-		db := database.GetDatabase()
-		repos := repository.InitRepositories(db)
-		controllers := controller.InitControllers(repos)
-		schema := controller.Schema(controllers)
-		handler = controller.GraphqlHandlfunc(schema)
+	suite.rr = httptest.NewRecorder()
+}
 
-		users = factory.CreateUsers(db, 5)
-		rr = httptest.NewRecorder()
-	})
+func (suite *SignUpTestSuite) TearDownTest() {
+	TruncateAllTables()
+}
 
-	AfterEach(func() {
-		truncateAllTables()
-	})
+func (suite *SignUpTestSuite) TestCreateUser() {
+	username := "testuser"
+	password := "password"
 
-	It("should create a user", func() {
-		loginUser := users[0]
-		token := internal.GenerateJWT(loginUser)
+	query := fmt.Sprintf(`{ "query": "mutation { signup(username: \"%s\", password: \"%s\") { token, tokenType, expiresIn } }" }`, username, password)
+	byteArray := []byte(query)
 
-		query := `{
-            "query": "mutation { signup(username: \"secondtestuser\", password: \"testpass\") { token, tokenType, expiresIn } }"
-        }`
-		byteArray := []byte(query)
+	req, err := http.NewRequest("POST", "/test-graphql", bytes.NewBuffer(byteArray))
+	suite.NoError(err)
+	req.Header.Set("Content-Type", "application/json")
 
-		req, err := http.NewRequest("POST", "/test-graphql", bytes.NewBuffer(byteArray))
-		Expect(err).NotTo(HaveOccurred())
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Authorization", "Bearer "+token.Token)
+	suite.handler.ServeHTTP(suite.rr, req)
 
-		handler.ServeHTTP(rr, req)
+	var res SignUpResponse
+	err = json.Unmarshal(suite.rr.Body.Bytes(), &res)
+	suite.NoError(err)
 
-		var res SignUpResponse
-		err = json.Unmarshal(rr.Body.Bytes(), &res)
-		Expect(err).NotTo(HaveOccurred())
+	assert.Equal(suite.T(), http.StatusOK, suite.rr.Code)
+	assert.Equal(suite.T(), "Bearer", res.Data.Signup.TokenType)
+	assert.IsType(suite.T(), "", res.Data.Signup.Token)
+	assert.IsType(suite.T(), int64(0), res.Data.Signup.ExpiresIn)
+}
 
-		Expect(rr.Code).To(Equal(http.StatusOK))
-		Expect(res.Data.Signup.TokenType).To(Equal("Bearer"))
-		Expect(res.Data.Signup.Token).To(BeAssignableToTypeOf(""))
-		Expect(res.Data.Signup.ExpiresIn).To(BeAssignableToTypeOf(int64(0)))
-	})
-})
+func TestSignUpTestSuite(t *testing.T) {
+	suite.Run(t, new(SignUpTestSuite))
+}
