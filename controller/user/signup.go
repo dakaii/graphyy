@@ -15,12 +15,12 @@ func (c *Controller) Signup(user entity.User) (entity.AuthToken, error) {
 	if err == nil {
 		return entity.AuthToken{}, errors.New("this username is already in use")
 	}
-	user, err = c.service.CreateUser(user)
+	createdUser, err := c.service.CreateUser(user)
 	if err != nil {
 		return entity.AuthToken{}, err
 	}
 
-	token := internal.GenerateJWT(user)
+	token := internal.GenerateJWT(*createdUser)
 	return token, nil
 }
 

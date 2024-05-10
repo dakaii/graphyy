@@ -23,32 +23,32 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 }
 
 // GetExistingUser fetches a user by the username from the db and returns it.
-func (repo *UserRepo) GetExistingUser(username string) (entity.User, error) {
-	var user entity.User
+func (repo *UserRepo) GetExistingUser(username string) (*entity.User, error) {
+	var user *entity.User
 	result := repo.db.Where("username = ?", username).First(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return entity.User{}, fmt.Errorf("no user found with username: %s", username)
+			return nil, fmt.Errorf("no user found with username: %s", username)
 		}
-		return entity.User{}, result.Error
+		return nil, result.Error
 	}
 	return user, nil
 }
 
 // CreateUser creates a new user in the db..
-func (repo *UserRepo) CreateUser(user entity.User) (entity.User, error) {
+func (repo *UserRepo) CreateUser(user entity.User) (*entity.User, error) {
 	hashedPass, err := HashPassword(user.Password)
 	if err != nil {
-		return entity.User{}, err
+		return nil, err
 	}
 	user.Password = hashedPass
 
 	result := repo.db.Create(&user)
 	if result.Error != nil {
-		return entity.User{}, result.Error
+		return nil, result.Error
 	}
 	fmt.Println("Inserted a user with ID:", user.ID)
-	return user, nil
+	return &user, nil
 }
 
 func HashPassword(password string) (string, error) {
