@@ -2,10 +2,11 @@ package controller
 
 import (
 	"context"
-	"graphyy/internal"
 	"log"
 	"net/http"
 	"strings"
+
+	"graphyy/internal/auth"
 
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
@@ -48,7 +49,7 @@ func GraphqlHandlfunc(schema graphql.Schema) *handler.Handler {
 			}
 
 			token := strings.TrimPrefix(authorization, bearerPrefix)
-			user, err := internal.VerifyJWT(token)
+			user, err := auth.VerifyJWT(token)
 			if err != nil {
 				log.Printf("Failed to verify JWT: %v", err)
 				return map[string]interface{}{

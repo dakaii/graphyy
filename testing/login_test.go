@@ -7,7 +7,7 @@ import (
 	"graphyy/controller"
 	"graphyy/database"
 	"graphyy/entity"
-	"graphyy/internal"
+	"graphyy/internal/auth"
 	"graphyy/repository"
 	"graphyy/testing/factory"
 	"net/http"
@@ -48,7 +48,7 @@ func (suite *LoginTestSuite) TearDownTest() {
 
 func (suite *LoginTestSuite) TestLoginUser() {
 	loginUser := suite.users[0]
-	token := internal.GenerateJWT(loginUser)
+	token := auth.GenerateJWT(loginUser)
 
 	query := fmt.Sprintf(`{ "query": "mutation { login(username: \"%s\", password: \"%s\") { token, tokenType, expiresIn } }" }`, loginUser.Username, loginUser.Password)
 	byteArray := []byte(query)

@@ -1,4 +1,4 @@
-package internal
+package auth
 
 import (
 	"errors"
@@ -10,7 +10,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-// TODO move this file to another package. (make a new package)
 func GenerateJWT(user entity.User) entity.AuthToken {
 	secret := envvar.AuthSecret()
 	expiresAt := time.Now().Add(time.Minute * 15).Unix()
@@ -60,6 +59,8 @@ func VerifyJWT(tknStr string) (entity.User, error) {
 	if keyExists(decoded, "username") {
 		username = decoded["username"].(string)
 	}
+
+	// TODO parse the other fields
 
 	// var createdAt time.Time
 	// if keyExists(decoded, "createdAt") {

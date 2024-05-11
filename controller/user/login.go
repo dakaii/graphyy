@@ -3,7 +3,8 @@ package user
 import (
 	"errors"
 	"graphyy/entity"
-	"graphyy/internal"
+
+	"graphyy/internal/auth"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -19,7 +20,7 @@ func (c *Controller) Login(user entity.User) (entity.AuthToken, error) {
 		return entity.AuthToken{}, errors.New("invalid credentials")
 	}
 
-	token := internal.GenerateJWT(user)
+	token := auth.GenerateJWT(user)
 	return token, nil
 }
 
