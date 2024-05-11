@@ -5,11 +5,13 @@ import (
 	"graphyy/controller"
 	"graphyy/database"
 	"graphyy/repository"
+	"graphyy/view"
 	"net/http"
 	"os"
 )
 
 func main() {
+
 	port, exists := os.LookupEnv("PORT")
 	if !exists {
 		port = "8081"
@@ -18,9 +20,9 @@ func main() {
 	db := database.GetDatabase()
 	repos := repository.InitRepositories(db)
 	controllers := controller.InitControllers(repos)
-	schema := controller.Schema(controllers)
+	schema := view.Schema(controllers)
 
-	http.Handle("/graphql", controller.GraphqlHandlfunc(schema))
+	http.Handle("/graphql", view.GraphqlHandlfunc(schema))
 
 	fmt.Println("server is started at: http://localhost:/" + port + "/")
 	fmt.Println("graphql api server is started at: http://localhost:" + port + "/graphql")

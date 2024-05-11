@@ -8,6 +8,7 @@ import (
 	"graphyy/database"
 	"graphyy/entity"
 	"graphyy/repository"
+	"graphyy/view"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -32,8 +33,8 @@ func (suite *SignUpTestSuite) SetupTest() {
 	db := database.GetDatabase()
 	repos := repository.InitRepositories(db)
 	controllers := controller.InitControllers(repos)
-	schema := controller.Schema(controllers)
-	suite.handler = controller.GraphqlHandlfunc(schema)
+	schema := view.Schema(controllers)
+	suite.handler = view.GraphqlHandlfunc(schema)
 
 	suite.rr = httptest.NewRecorder()
 }

@@ -1,4 +1,4 @@
-package controller
+package view
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"graphyy/controller"
 	"graphyy/internal/auth"
 
 	"github.com/graphql-go/graphql"
@@ -13,7 +14,7 @@ import (
 )
 
 // Schema builds a graphql schema and returns it
-func Schema(controllers *Controllers) graphql.Schema {
+func Schema(controllers *controller.Controllers) graphql.Schema {
 	schema, err := graphql.NewSchema(graphql.SchemaConfig{
 		Query:    getRootQuery(controllers),
 		Mutation: getRootMutation(controllers),

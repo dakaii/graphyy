@@ -7,12 +7,12 @@ import (
 
 // Controllers contains all the controllers
 type Controllers struct {
-	userController *user.Controller
+	UserController *user.Controller
 }
 
 // InitControllers returns a new Controllers
 func InitControllers(repositories *repository.Repositories) *Controllers {
 	return &Controllers{
-		userController: user.InitController(repositories.UserRepo),
+		UserController: user.InitController(repositories.UserRepo),
 	}
 }
