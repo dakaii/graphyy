@@ -2,7 +2,7 @@ package view
 
 import (
 	"graphyy/controller"
-	"graphyy/entity"
+	"graphyy/domain"
 
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
@@ -38,7 +38,7 @@ func getSignupField(controllers *controller.Controllers) *graphql.Field {
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			username, _ := params.Args["username"].(string)
 			password, _ := params.Args["password"].(string)
-			res, err := controllers.UserController.Signup(entity.User{Username: username, Password: password})
+			res, err := controllers.UserController.Signup(domain.User{Username: username, Password: password})
 			if err != nil {
 				return nil, gqlerrors.FormatError(err)
 			}
@@ -62,7 +62,7 @@ func getLoginField(controllers *controller.Controllers) *graphql.Field {
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			username, _ := params.Args["username"].(string)
 			password, _ := params.Args["password"].(string)
-			res, err := controllers.UserController.Login(entity.User{Username: username, Password: password})
+			res, err := controllers.UserController.Login(domain.User{Username: username, Password: password})
 			if err != nil {
 				return nil, gqlerrors.FormatError(err)
 			}
@@ -94,7 +94,7 @@ func getMeField() *graphql.Field {
 		Description: "Get the logged-in user's info",
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			rootValue := params.Info.RootValue.(map[string]interface{})
-			user := rootValue["currentUser"].(entity.User)
+			user := rootValue["currentUser"].(domain.User)
 			return user, nil
 		},
 	}

@@ -2,7 +2,7 @@ package user
 
 import (
 	"errors"
-	"graphyy/entity"
+	"graphyy/domain"
 
 	"graphyy/internal/auth"
 
@@ -10,14 +10,14 @@ import (
 )
 
 // Login returns a jwt.
-func (c *Controller) Login(user entity.User) (entity.AuthToken, error) {
+func (c *Controller) Login(user domain.User) (domain.AuthToken, error) {
 	existingUser, err := c.service.GetExistingUser(user.Username)
 	if err != nil {
-		return entity.AuthToken{}, errors.New("no user found with the inputted username")
+		return domain.AuthToken{}, errors.New("no user found with the inputted username")
 	}
 	isValid := checkPasswordHash(user.Password, existingUser.Password)
 	if !isValid {
-		return entity.AuthToken{}, errors.New("invalid credentials")
+		return domain.AuthToken{}, errors.New("invalid credentials")
 	}
 
 	token := auth.GenerateJWT(user)

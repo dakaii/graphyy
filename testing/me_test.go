@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"graphyy/controller"
 	"graphyy/database"
-	"graphyy/entity"
+	"graphyy/domain"
 	"graphyy/repository"
 	"graphyy/view"
 	"net/http"
@@ -25,7 +25,7 @@ type MeUpTestSuite struct {
 
 type MeResponse struct {
 	Data struct {
-		Signup entity.AuthToken `json:"signup"`
+		Signup domain.AuthToken `json:"signup"`
 	} `json:"data"`
 }
 

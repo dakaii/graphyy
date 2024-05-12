@@ -3,20 +3,20 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"graphyy/entity"
+	"graphyy/domain"
 	"graphyy/internal/envvar"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-func GenerateJWT(user entity.User) entity.AuthToken {
+func GenerateJWT(user domain.User) domain.AuthToken {
 	secret := envvar.AuthSecret()
 	expiresAt := time.Now().Add(time.Minute * 15).Unix()
 
 	token := jwt.New(jwt.SigningMethodHS256)
 
-	token.Claims = &entity.AuthTokenClaim{
+	token.Claims = &domain.AuthTokenClaim{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiresAt,
 		},
@@ -27,14 +27,14 @@ func GenerateJWT(user entity.User) entity.AuthToken {
 	if error != nil {
 		fmt.Println(error)
 	}
-	return entity.AuthToken{
+	return domain.AuthToken{
 		Token:     tokenString,
 		TokenType: "Bearer",
 		ExpiresIn: expiresAt,
 	}
 }
 
-func VerifyJWT(tknStr string) (entity.User, error) {
+func VerifyJWT(tknStr string) (domain.User, error) {
 
 	claims := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
@@ -43,12 +43,12 @@ func VerifyJWT(tknStr string) (entity.User, error) {
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			return entity.User{}, errors.New("signature invalid")
+			return domain.User{}, errors.New("signature invalid")
 		}
-		return entity.User{}, errors.New("could not parse the auth token")
+		return domain.User{}, errors.New("could not parse the auth token")
 	}
 	if !token.Valid {
-		return entity.User{}, errors.New("invalid token")
+		return domain.User{}, errors.New("invalid token")
 	}
 
 	decoded := make(map[string]interface{})
@@ -69,7 +69,7 @@ func VerifyJWT(tknStr string) (entity.User, error) {
 	// 		return entity.User{}, fmt.Errorf("could not parse createdAt time: %w", err)
 	// 	}
 	// }
-	return entity.User{Username: username}, nil
+	return domain.User{Username: username}, nil
 }
 
 func keyExists(decoded map[string]interface{}, key string) bool {

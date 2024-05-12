@@ -2,23 +2,23 @@ package user
 
 import (
 	"errors"
-	"graphyy/entity"
+	"graphyy/domain"
 	"graphyy/internal/auth"
 )
 
 // Signup lets users sign up for this application and returns a jwt.
-func (c *Controller) Signup(user entity.User) (entity.AuthToken, error) {
+func (c *Controller) Signup(user domain.User) (domain.AuthToken, error) {
 	if !isValidUsername(user.Username) {
-		return entity.AuthToken{}, errors.New("invalid username")
+		return domain.AuthToken{}, errors.New("invalid username")
 	}
 	existingUser, _ := c.service.GetExistingUser(user.Username)
 	if existingUser != nil {
-		return entity.AuthToken{}, errors.New("this username is already in use")
+		return domain.AuthToken{}, errors.New("this username is already in use")
 	}
 
 	createdUser, err := c.service.CreateUser(user)
 	if err != nil {
-		return entity.AuthToken{}, err
+		return domain.AuthToken{}, err
 	}
 
 	token := auth.GenerateJWT(*createdUser)

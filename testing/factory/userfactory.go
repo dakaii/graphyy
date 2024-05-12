@@ -3,7 +3,7 @@ package factory
 import (
 	"context"
 	"fmt"
-	"graphyy/entity"
+	"graphyy/domain"
 	"graphyy/repository/userrepo"
 	"time"
 
@@ -16,11 +16,11 @@ type dbKey struct{}
 type passwordKey struct{}
 
 var UserFactory = factory.NewFactory(
-	&entity.User{},
+	&domain.User{},
 ).Attr("ID", func(args factory.Args) (interface{}, error) {
 	return uuid.New(), nil
 }).Attr("Username", func(args factory.Args) (interface{}, error) {
-	user := args.Instance().(*entity.User)
+	user := args.Instance().(*domain.User)
 	return fmt.Sprintf("user-%s", user.ID.String()), nil
 }).Attr("Password", func(args factory.Args) (interface{}, error) {
 	password := args.Context().Value(passwordKey{}).(string)
@@ -35,20 +35,20 @@ var UserFactory = factory.NewFactory(
 	return db.Create(args.Instance()).Error
 })
 
-func CreateUser(db *gorm.DB) entity.User {
+func CreateUser(db *gorm.DB) domain.User {
 	tx := db.Begin()
 	ctx := context.WithValue(context.Background(), dbKey{}, tx)
 	v, err := UserFactory.CreateWithContext(ctx)
 	if err != nil {
 		panic(err)
 	}
-	user := *v.(*entity.User)
+	user := *v.(*domain.User)
 	tx.Commit()
 	return user
 }
 
-func CreateUsers(db *gorm.DB, n int) []entity.User {
-	var users []entity.User
+func CreateUsers(db *gorm.DB, n int) []domain.User {
+	var users []domain.User
 	for i := 0; i < n; i++ {
 		tx := db.Begin()
 		ctx := context.WithValue(context.Background(), dbKey{}, tx)
@@ -58,7 +58,7 @@ func CreateUsers(db *gorm.DB, n int) []entity.User {
 		if err != nil {
 			panic(err)
 		}
-		user := *v.(*entity.User)
+		user := *v.(*domain.User)
 		user.Password = password
 		tx.Commit()
 		users = append(users, user)

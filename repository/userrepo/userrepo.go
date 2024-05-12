@@ -3,7 +3,7 @@ package userrepo
 import (
 	"errors"
 	"fmt"
-	"graphyy/entity"
+	"graphyy/domain"
 	"graphyy/internal/envvar"
 	"time"
 
@@ -25,7 +25,7 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 }
 
 // GetExistingUser fetches a user by the username from the db and returns it.
-func (repo *UserRepo) GetExistingUser(username string) (*entity.User, error) {
+func (repo *UserRepo) GetExistingUser(username string) (*domain.User, error) {
 	var user UserEntity
 	result := repo.db.Where("username = ? AND deleted_at IS NULL", username).First(&user)
 	if result.Error != nil {
@@ -34,7 +34,7 @@ func (repo *UserRepo) GetExistingUser(username string) (*entity.User, error) {
 		}
 		return nil, result.Error
 	}
-	return &entity.User{
+	return &domain.User{
 		ID:        user.ID,
 		Username:  user.Username,
 		Password:  user.Password,
@@ -44,7 +44,7 @@ func (repo *UserRepo) GetExistingUser(username string) (*entity.User, error) {
 }
 
 // CreateUser creates a new user in the db..
-func (repo *UserRepo) CreateUser(user entity.User) (*entity.User, error) {
+func (repo *UserRepo) CreateUser(user domain.User) (*domain.User, error) {
 	hashedPass, err := HashPassword(user.Password)
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (repo *UserRepo) CreateUser(user entity.User) (*entity.User, error) {
 		return nil, result.Error
 	}
 	fmt.Println("Inserted a user with ID:", dbUser.ID)
-	return &entity.User{
+	return &domain.User{
 		ID:        dbUser.ID,
 		Username:  dbUser.Username,
 		Password:  dbUser.Password,

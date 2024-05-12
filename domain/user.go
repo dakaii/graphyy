@@ -1,12 +1,10 @@
-package entity
+package domain
 
 import (
 	"time"
 
 	"github.com/google/uuid"
 )
-
-// TODO probably not the best package name. check what the best practice is.
 
 // User struct
 type User struct {
@@ -16,9 +14,3 @@ type User struct {
 	Username  string    `json:"username"`
 	Password  string
 }
-
-// BeforeCreate will set a UUID rather than numeric ID.
-// func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
-// 	user.ID = uuid.New()
-// 	return
-// }

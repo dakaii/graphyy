@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"graphyy/controller"
 	"graphyy/database"
-	"graphyy/entity"
+	"graphyy/domain"
 	"graphyy/internal/auth"
 	"graphyy/repository"
 	"graphyy/testing/factory"
@@ -21,15 +21,15 @@ import (
 
 type LoginTestSuite struct {
 	suite.Suite
-	users   []entity.User
+	users   []domain.User
 	rr      *httptest.ResponseRecorder
 	handler http.Handler
 }
 
 type LogInResponse struct {
 	Data struct {
-		Login entity.AuthToken `json:"login"`
-	} `json:"data"`
+		Login domain.AuthToken `json:"login"`
+	} `json"`
 }
 
 func (suite *LoginTestSuite) SetupTest() {
