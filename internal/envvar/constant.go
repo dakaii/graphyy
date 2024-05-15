@@ -5,6 +5,14 @@ import (
 	"strconv"
 )
 
+func Port() string {
+	port, exists := os.LookupEnv("PORT")
+	if !exists {
+		port = "8081"
+	}
+	return port
+}
+
 // GetSecret returns the jwt secret.
 func AuthSecret() string {
 	secret, exists := os.LookupEnv("AUTH_SECRET")
