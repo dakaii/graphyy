@@ -14,6 +14,14 @@ func AuthSecret() string {
 	return secret
 }
 
+func DBHost() string {
+	host, exists := os.LookupEnv("DB_HOST")
+	if !exists {
+		host = "localhost"
+	}
+	return host
+}
+
 func DBUser() string {
 	user, exists := os.LookupEnv("DB_USER")
 	if !exists {
@@ -36,13 +44,6 @@ func DBName() string {
 		dbname = "postgres"
 	}
 	return dbname
-}
-func DBHost() string {
-	host, exists := os.LookupEnv("DB_HOST")
-	if !exists {
-		host = "localhost"
-	}
-	return host
 }
 
 func DBPort() string {
