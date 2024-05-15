@@ -29,7 +29,7 @@ type LoginTestSuite struct {
 type LogInResponse struct {
 	Data struct {
 		Login domain.AuthToken `json:"login"`
-	} `json"`
+	} `json:"data"`
 }
 
 func (suite *LoginTestSuite) SetupTest() {
