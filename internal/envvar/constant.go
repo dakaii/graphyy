@@ -15,7 +15,7 @@ func AuthSecret() string {
 }
 
 func DBUser() string {
-	user, exists := os.LookupEnv("POSTGRES_USER")
+	user, exists := os.LookupEnv("DB_USER")
 	if !exists {
 		user = "postgres"
 	}
@@ -23,7 +23,7 @@ func DBUser() string {
 }
 
 func DBPassword() string {
-	password, exists := os.LookupEnv("POSTGRES_PASSWORD")
+	password, exists := os.LookupEnv("DB_PASS")
 	if !exists {
 		password = "postgres"
 	}
@@ -31,14 +31,14 @@ func DBPassword() string {
 }
 
 func DBName() string {
-	dbname, exists := os.LookupEnv("POSTGRES_DB")
+	dbname, exists := os.LookupEnv("DB_NAME")
 	if !exists {
 		dbname = "postgres"
 	}
 	return dbname
 }
 func DBHost() string {
-	host, exists := os.LookupEnv("POSTGRES_HOST")
+	host, exists := os.LookupEnv("DB_HOST")
 	if !exists {
 		host = "localhost"
 	}
@@ -46,7 +46,7 @@ func DBHost() string {
 }
 
 func DBPort() string {
-	port, exists := os.LookupEnv("POSTGRES_PORT")
+	port, exists := os.LookupEnv("DB_PORT")
 	if !exists {
 		port = "5432"
 	}
