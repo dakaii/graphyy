@@ -33,3 +33,11 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
+
+      - name: Build and push Docker image (goose)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.goose
+          push: true
+          tags: ghcr.io/${{ github.repository }}:goose-latest

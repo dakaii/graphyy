@@ -12,3 +12,10 @@ RUN go install github.com/pressly/goose/cmd/goose@latest
 
 # This container will be executable, so ensure goose is in the PATH
 ENV PATH="/go/bin:${PATH}"
+
+# Copy the migration files into the container
+COPY ./migrations /app/migrations
+
+# Run the migrations when the container starts
+# Replace the connection string with your actual database connection string
+CMD goose -dir /app/migrations postgres "user=$DB_USER password=$DB_PASS dbname=$DB_NAME host=$DB_HOST sslmode=disable" up
