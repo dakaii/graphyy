@@ -18,4 +18,4 @@ COPY ./migrations /app/migrations
 
 # Run the migrations when the container starts
 # Replace the connection string with your actual database connection string
-CMD goose -dir /app/migrations postgres "user=$DB_USER password=$DB_PASS dbname=$DB_NAME host=$DB_HOST sslmode=disable" up
+CMD goose -dir /app/migrations postgres "user=$POSTGRES_USER password=$POSTGRES_PASSWORD dbname=$POSTGRES_DB host=$POSTGRES_HOST sslmode=disable" up
