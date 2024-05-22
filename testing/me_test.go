@@ -28,7 +28,9 @@ type MeUpTestSuite struct {
 
 type MeResponse struct {
 	Data struct {
-		Signup domain.AuthToken `json:"signup"`
+		Me struct {
+			Username string `json:"username"`
+		} `json:"me"`
 	} `json:"data"`
 }
 
@@ -50,7 +52,6 @@ func (suite *MeUpTestSuite) TestMeEndpoint() {
 	loginUser := suite.users[0]
 	token := auth.GenerateJWT(loginUser)
 
-	// Then, use the token to query the me endpoint
 	meQuery := `{ "query": "{ me { username } }" }`
 	byteArray := []byte(meQuery)
 
@@ -61,19 +62,12 @@ func (suite *MeUpTestSuite) TestMeEndpoint() {
 	suite.rr = httptest.NewRecorder()
 	suite.handler.ServeHTTP(suite.rr, req)
 
-	var meRes struct {
-		Data struct {
-			Me struct {
-				Username string
-			}
-		}
-	}
-	err = json.Unmarshal(suite.rr.Body.Bytes(), &meRes)
+	var res MeResponse
+	err = json.Unmarshal(suite.rr.Body.Bytes(), &res)
 	suite.NoError(err)
 
-	// // Check the response
 	assert.Equal(suite.T(), http.StatusOK, suite.rr.Code)
-	assert.Equal(suite.T(), loginUser.Username, meRes.Data.Me.Username)
+	assert.Equal(suite.T(), loginUser.Username, res.Data.Me.Username)
 }
 
 func TestMeTestSuite(t *testing.T) {
