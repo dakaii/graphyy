@@ -7,7 +7,9 @@ import (
 	"graphyy/controller"
 	"graphyy/database"
 	"graphyy/domain"
+	"graphyy/internal/auth"
 	"graphyy/repository"
+	"graphyy/testing/factory"
 	"graphyy/view"
 	"net/http"
 	"net/http/httptest"
@@ -19,6 +21,7 @@ import (
 
 type MeUpTestSuite struct {
 	suite.Suite
+	users   []domain.User
 	rr      *httptest.ResponseRecorder
 	handler http.Handler
 }
@@ -36,6 +39,7 @@ func (suite *MeUpTestSuite) SetupTest() {
 	schema := view.Schema(controllers)
 	suite.handler = view.GraphqlHandlfunc(schema)
 
+	suite.users = factory.CreateUsers(db, 5)
 	suite.rr = httptest.NewRecorder()
 }
 
@@ -43,32 +47,17 @@ func (suite *MeUpTestSuite) TearDownTest() {
 	TruncateAllTables()
 }
 func (suite *MeUpTestSuite) TestMeEndpoint() {
+	loginUser := suite.users[0]
+	token := auth.GenerateJWT(loginUser)
 
-	username := "testuser"
-	password := "password"
-
-	// First, create a user
-	signupQuery := fmt.Sprintf(`{ "query": "mutation { signup(username: \"%s\", password: \"%s\") { token, tokenType, expiresIn } }" }`, username, password)
-	byteArray := []byte(signupQuery)
+	// Then, use the token to query the me endpoint
+	meQuery := `{ "query": "{ me { username } }" }`
+	byteArray := []byte(meQuery)
 
 	req, err := http.NewRequest("POST", "/test-graphql", bytes.NewBuffer(byteArray))
 	suite.NoError(err)
 	req.Header.Set("Content-Type", "application/json")
-
-	suite.handler.ServeHTTP(suite.rr, req)
-
-	var signupRes SignUpResponse
-	err = json.Unmarshal(suite.rr.Body.Bytes(), &signupRes)
-	suite.NoError(err)
-
-	// Then, use the token to query the me endpoint
-	meQuery := `{ "query": "{ me { username } }" }`
-	byteArray = []byte(meQuery)
-
-	req, err = http.NewRequest("POST", "/test-graphql", bytes.NewBuffer(byteArray))
-	suite.NoError(err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", signupRes.Data.Signup.Token)) // set the Authorization header
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token.Token))
 	suite.rr = httptest.NewRecorder()
 	suite.handler.ServeHTTP(suite.rr, req)
 
@@ -84,7 +73,7 @@ func (suite *MeUpTestSuite) TestMeEndpoint() {
 
 	// // Check the response
 	assert.Equal(suite.T(), http.StatusOK, suite.rr.Code)
-	assert.Equal(suite.T(), username, meRes.Data.Me.Username)
+	assert.Equal(suite.T(), loginUser.Username, meRes.Data.Me.Username)
 }
 
 func TestMeTestSuite(t *testing.T) {
