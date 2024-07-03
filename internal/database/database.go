@@ -2,8 +2,8 @@ package database
 
 import (
 	"fmt"
-	"graphyy/internal/envvar"
 
+	"github.com/dakaii/graphyy/internal/envvar"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

@@ -6,9 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"graphyy/controller"
-	"graphyy/internal/auth"
-
+	"github.com/dakaii/graphyy/internal/auth"
+	"github.com/dakaii/graphyy/internal/controller"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 )

@@ -1,9 +1,8 @@
 package view
 
 import (
-	"graphyy/controller"
-	"graphyy/domain"
-
+	"github.com/dakaii/graphyy/internal/controller"
+	"github.com/dakaii/graphyy/internal/domain"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
 )

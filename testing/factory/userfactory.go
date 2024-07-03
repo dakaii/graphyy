@@ -3,11 +3,11 @@ package factory
 import (
 	"context"
 	"fmt"
-	"graphyy/domain"
-	"graphyy/repository/userrepo"
 	"time"
 
 	"github.com/bluele/factory-go/factory"
+	"github.com/dakaii/graphyy/internal/domain"
+	"github.com/dakaii/graphyy/internal/repository/userrepo"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

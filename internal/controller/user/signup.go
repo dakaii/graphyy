@@ -2,8 +2,9 @@ package user
 
 import (
 	"errors"
-	"graphyy/domain"
-	"graphyy/internal/auth"
+
+	"github.com/dakaii/graphyy/internal/auth"
+	"github.com/dakaii/graphyy/internal/domain"
 )
 
 // Signup lets users sign up for this application and returns a jwt.

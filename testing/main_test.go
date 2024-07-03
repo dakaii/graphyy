@@ -2,9 +2,9 @@ package testing
 
 import (
 	"fmt"
-	"graphyy/internal/envvar"
 	"log"
 
+	"github.com/dakaii/graphyy/internal/envvar"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

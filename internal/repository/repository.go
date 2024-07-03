@@ -1,8 +1,7 @@
 package repository
 
 import (
-	"graphyy/repository/userrepo"
-
+	"github.com/dakaii/graphyy/internal/repository/userrepo"
 	"gorm.io/gorm"
 )
 

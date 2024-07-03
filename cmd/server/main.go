@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"graphyy/controller"
-	"graphyy/database"
-	"graphyy/internal/envvar"
-	"graphyy/repository"
-	"graphyy/view"
 	"net/http"
+
+	"github.com/dakaii/graphyy/internal/controller"
+	"github.com/dakaii/graphyy/internal/database"
+	"github.com/dakaii/graphyy/internal/envvar"
+	"github.com/dakaii/graphyy/internal/repository"
+	"github.com/dakaii/graphyy/internal/view"
 )
 
 func main() {

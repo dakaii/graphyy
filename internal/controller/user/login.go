@@ -2,10 +2,9 @@ package user
 
 import (
 	"errors"
-	"graphyy/domain"
 
-	"graphyy/internal/auth"
-
+	"github.com/dakaii/graphyy/internal/auth"
+	"github.com/dakaii/graphyy/internal/domain"
 	"golang.org/x/crypto/bcrypt"
 )
 

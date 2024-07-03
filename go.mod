@@ -1,4 +1,4 @@
-module graphyy
+module github.com/dakaii/graphyy
 
 go 1.22
 

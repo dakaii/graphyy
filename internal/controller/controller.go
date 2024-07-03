@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"graphyy/controller/user"
-	"graphyy/repository"
+	"github.com/dakaii/graphyy/internal/controller/user"
+	"github.com/dakaii/graphyy/internal/repository"
 )
 
 // Controllers contains all the controllers
